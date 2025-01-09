@@ -16,6 +16,7 @@ import { NotFound } from './pages/NotFound/Loadable';
 import { useTranslation } from 'react-i18next';
 import { useGlobalSlice } from './slice';
 import { Login } from './pages/Login/Loadable';
+import { Feed } from './pages/Feed/Loadable';
 
 export function App() {
   const { i18n } = useTranslation();
@@ -30,6 +31,7 @@ export function App() {
         <meta name="description" content="Jobby App" />
       </Helmet>
       <Routes>
+        <Route path="/" element={<Feed />} />
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

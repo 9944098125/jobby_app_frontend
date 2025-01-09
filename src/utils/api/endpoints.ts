@@ -1,16 +1,16 @@
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from 'types';
 
-const baseUrl = 'https://future.appening.xyz/api';
+const baseUrl = 'https://jobbyappbackend-production.up.railway.app/api';
 
 const defaultHeaders = {
   'Content-Type': 'application/json',
 };
 
 const prepareHeaders = (headers: any, { getState }) => {
-  const token = (getState() as RootState)?.global?.user?.api_token;
+  const token = (getState() as RootState)?.global?.token;
   if (token) {
-    headers.set('api-token', token);
+    headers.set('Authorization', `Bearer ${token}`);
   }
   return headers;
 };
@@ -33,4 +33,8 @@ export const HTTP_METHODS = {
 
 export const endpoints = {
   baseUrl,
+  login: {
+    url: '/auth/login',
+    method: HTTP_METHODS.POST,
+  },
 };

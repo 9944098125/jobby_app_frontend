@@ -23,7 +23,19 @@ const slice = createSlice({
 export const api = createApi({
   reducerPath: 'global',
   baseQuery,
-  endpoints: build => ({}),
+  endpoints: build => ({
+    login: build.mutation<any, any>({
+      query: body => {
+        return {
+          ...endpoints.login,
+          body: body,
+        };
+      },
+      transformErrorResponse(baseQueryReturnValue, meta, arg) {
+        return formatErrors(baseQueryReturnValue.data);
+      },
+    }),
+  }),
 });
 
 export const { actions: globalActions } = slice;
