@@ -7,6 +7,7 @@ import { endpoints, formatErrors, baseQuery } from 'utils/api/endpoints';
 
 export const initialState: GlobalState = {
   user: JSON.parse(localStorage.getItem('user') || 'null') || null,
+  token: localStorage.getItem('token') || null,
 };
 
 const slice = createSlice({
@@ -29,6 +30,50 @@ export const api = createApi({
         return {
           ...endpoints.login,
           body: body,
+        };
+      },
+      transformErrorResponse(baseQueryReturnValue, meta, arg) {
+        return formatErrors(baseQueryReturnValue.data);
+      },
+    }),
+    createFeed: build.mutation<any, any>({
+      query: body => {
+        return {
+          ...endpoints.createFeed,
+          body: body,
+        };
+      },
+      transformErrorResponse(baseQueryReturnValue, meta, arg) {
+        return formatErrors(baseQueryReturnValue.data);
+      },
+    }),
+    getFeeds: build.query<any, any>({
+      query: params => {
+        return {
+          ...endpoints.fetchFeed,
+          params,
+        };
+      },
+      transformErrorResponse(baseQueryReturnValue, meta, arg) {
+        return formatErrors(baseQueryReturnValue.data);
+      },
+    }),
+    updateFeed: build.mutation<any, any>({
+      query: params => {
+        return {
+          ...endpoints.fetchFeed,
+          params,
+        };
+      },
+      transformErrorResponse(baseQueryReturnValue, meta, arg) {
+        return formatErrors(baseQueryReturnValue.data);
+      },
+    }),
+    deleteFeed: build.mutation<any, any>({
+      query: params => {
+        return {
+          ...endpoints.deleteFeed,
+          params,
         };
       },
       transformErrorResponse(baseQueryReturnValue, meta, arg) {

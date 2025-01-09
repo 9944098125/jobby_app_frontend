@@ -27,7 +27,7 @@ export const formatErrors = (errors: any) => {
 export const HTTP_METHODS = {
   GET: 'GET',
   POST: 'POST',
-  PUT: 'PUT',
+  PATCH: 'PATCH',
   DELETE: 'DELETE',
 };
 
@@ -36,5 +36,21 @@ export const endpoints = {
   login: {
     url: '/auth/login',
     method: HTTP_METHODS.POST,
+  },
+  fetchFeed: {
+    url: '/feed/read',
+    method: HTTP_METHODS.GET,
+  },
+  createFeed: {
+    url: '/feed/create',
+    method: HTTP_METHODS.POST,
+  },
+  updateFeed: {
+    url: '/feed/update',
+    method: HTTP_METHODS.PATCH,
+  },
+  deleteFeed: {
+    url: '/feed/delete',
+    method: HTTP_METHODS.DELETE,
   },
 };
