@@ -6,8 +6,8 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { endpoints, formatErrors, baseQuery } from 'utils/api/endpoints';
 
 export const initialState: GlobalState = {
-  user: JSON.parse(localStorage.getItem('user') || 'null') || null,
-  token: localStorage.getItem('token') || null,
+  user: JSON.parse(localStorage.getItem('asp-ja-user') || 'null') || null,
+  token: localStorage.getItem('asp-ja-token') || null,
 };
 
 const slice = createSlice({
@@ -15,8 +15,12 @@ const slice = createSlice({
   initialState,
   reducers: {
     setUser(state, action: PayloadAction<any>) {
-      localStorage.setItem('user', JSON.stringify(action.payload));
+      localStorage.setItem('asp-ja-user', JSON.stringify(action.payload));
       state.user = action.payload;
+    },
+    setToken(state, action: PayloadAction<any>) {
+      localStorage.setItem('asp-ja-token', action.payload);
+      state.token = action.payload;
     },
   },
 });
