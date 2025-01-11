@@ -5,6 +5,7 @@ import { Input } from 'app/components/ui/input';
 import { Button } from 'app/components/ui/button';
 import ErrorMessage from 'app/components/ui/error-message';
 import ShowPassword from './show-password';
+import { Link } from 'react-router-dom';
 
 type Props = {
   showPassword: boolean;
@@ -32,6 +33,14 @@ const LoginForm = (props: Props) => {
             Login
           </span>
         </h5>{' '}
+        <div className="py-2">
+          <p className="text-[12px] font-poppins font-medium">
+            Don't have an account ? Please,{' '}
+            <Link to="/register" style={{ textDecoration: 'none' }}>
+              Register
+            </Link>
+          </p>
+        </div>
         <form onSubmit={handleSubmit(submitLoginForm)}>
           {/* EMAIL/PHONE FIELD  */}
           <div className="mb-4">

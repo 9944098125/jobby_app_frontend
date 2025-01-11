@@ -22,6 +22,12 @@ const slice = createSlice({
       localStorage.setItem('asp-ja-token', action.payload);
       state.token = action.payload;
     },
+    logout(state) {
+      localStorage.removeItem('asp-ja-user');
+      localStorage.removeItem('asp-ja-token');
+      state.user = null;
+      state.token = null;
+    },
   },
 });
 
@@ -33,6 +39,17 @@ export const api = createApi({
       query: body => {
         return {
           ...endpoints.login,
+          body: body,
+        };
+      },
+      transformErrorResponse(baseQueryReturnValue, meta, arg) {
+        return formatErrors(baseQueryReturnValue.data);
+      },
+    }),
+    register: build.mutation<any, any>({
+      query: body => {
+        return {
+          ...endpoints.register,
           body: body,
         };
       },

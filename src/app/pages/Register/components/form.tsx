@@ -2,17 +2,24 @@ import { Button } from 'app/components/ui/button';
 import ErrorMessage from 'app/components/ui/error-message';
 import { Input } from 'app/components/ui/input';
 import Label from 'app/components/ui/label';
+import { Switch } from 'app/components/ui/switch';
 import ShowPassword from 'app/pages/Login/components/show-password';
-import React from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import { Link } from 'react-router-dom';
 
 type Props = {
   showPassword: boolean;
   showConfirmPassword: boolean;
   setShowPassword: (val: boolean) => void;
   setShowConfirmPassword: (val: boolean) => void;
+  changeImage: (file: File | null) => void;
+  imageUploading: boolean;
+  isLoading: boolean;
+  registerUser: (body: any) => void;
+  profilePicture: string;
 };
 export const RegisterForm = (props: Props) => {
   const {
@@ -20,6 +27,11 @@ export const RegisterForm = (props: Props) => {
     setShowPassword,
     showConfirmPassword,
     setShowConfirmPassword,
+    changeImage,
+    imageUploading,
+    registerUser,
+    isLoading,
+    profilePicture,
   } = props;
   const form = useForm();
 
@@ -27,7 +39,7 @@ export const RegisterForm = (props: Props) => {
     register,
     handleSubmit,
     watch,
-    setValue,
+    control,
     formState: { errors },
   } = form;
 
@@ -71,18 +83,43 @@ export const RegisterForm = (props: Props) => {
     },
   ];
 
+  const [phone, setPhone] = useState('');
+  const [code, setCode] = useState('');
+
+  const onChange = (value, data, event, formattedValue) => {
+    setPhone(value);
+    setCode(data.dialCode);
+  };
+
   const submitRegisterForm = (data: any) => {
-    console.log(data);
+    const body = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      phone: phone.slice(2),
+      countryCode: code,
+      profilePicture: profilePicture,
+      isEmployer: data.isEmployer,
+    };
+    registerUser(body);
   };
 
   return (
     <React.Fragment>
-      <div className="w-full p-4 border-2 border-teal-600 rounded-[12px] bg-gray-900 bg-opacity-40 backdrop-blur-lg">
+      <div className="w-full p-4 border-2 border-teal-600 rounded-[12px] bg-opacity-40 backdrop-blur-lg">
         <h5 className="text-2xl font-medium font-poppins">
           <span className="bg-gradient-to-r from-yellow-400 via-pink-500 to-teal-700 bg-clip-text text-transparent">
             Register
           </span>
         </h5>
+        <div className="py-2">
+          <p className="text-[12px] font-poppins font-medium">
+            Already have an account ? Please,
+            <Link to="/login" style={{ textDecoration: 'none' }}>
+              Login
+            </Link>
+          </p>
+        </div>
         <form className="w-full" onSubmit={handleSubmit(submitRegisterForm)}>
           <div className="grid grid-cols-12 p-4 gap-4">
             {fields.map((item, idx) => {
@@ -95,8 +132,8 @@ export const RegisterForm = (props: Props) => {
                     {item.fieldName === 'phone' ? (
                       <PhoneInput
                         country={'in'}
-                        value={watch('phone')}
-                        onChange={phone => setValue('phone', phone)}
+                        value={phone}
+                        onChange={onChange}
                       />
                     ) : (
                       <Input
@@ -158,15 +195,13 @@ export const RegisterForm = (props: Props) => {
               <Label htmlFor="ProfilePicture" dark>
                 <Input
                   id="ProfilePicture"
-                  {...register('profilePicture', {
-                    required: 'Profile Picture is required !',
-                  })}
+                  onChange={(event: any) => changeImage(event.target?.files[0])}
                   type="file"
                   style={{ display: 'none' }}
                 />
                 <div className="border-2 border-teal-600 rounded-full p-2 h-[60px] w-[60px] place-self-center">
                   <img
-                    src={watch('profilePicture') || '/images/avatar.png'}
+                    src={profilePicture || '/images/avatar.png'}
                     alt=""
                     className="h-[45px] w-[45px] rounded-full"
                   />
@@ -174,9 +209,33 @@ export const RegisterForm = (props: Props) => {
               </Label>
               <ErrorMessage error={errors.profilePicture} />
             </div>
+
+            <div className="col-span-12 md:col-span-6">
+              <Label htmlFor="isEmployer" dark>
+                Employer?{' '}
+              </Label>
+
+              <Controller
+                name="isEmployer"
+                control={control}
+                defaultValue={false} // Default state
+                render={({ field: { value, onChange } }) => (
+                  <Switch
+                    id="isEmployer"
+                    checked={value}
+                    onCheckedChange={onChange}
+                    className="z-99 text-blue-600"
+                  />
+                )}
+              />
+              {errors.isEmployer && (
+                <ErrorMessage error={errors.isEmployer.message} />
+              )}
+            </div>
           </div>
 
           <Button
+            disabled={imageUploading}
             variant="special"
             className="w-full h-[45px] rounded-[9px]"
             type="submit"
