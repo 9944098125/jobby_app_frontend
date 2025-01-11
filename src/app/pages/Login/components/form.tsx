@@ -6,6 +6,7 @@ import { Button } from 'app/components/ui/button';
 import ErrorMessage from 'app/components/ui/error-message';
 import ShowPassword from './show-password';
 import { Link } from 'react-router-dom';
+import { Icons } from 'app/components/ui/icons';
 
 type Props = {
   showPassword: boolean;
@@ -93,7 +94,8 @@ const LoginForm = (props: Props) => {
             variant="special"
             className="w-full flex justify-center items-center h-[45px] rounded-[9px]"
           >
-            Login
+            Login{' '}
+            {isLoading && <Icons.Spinner className="animate-spin h-8 w-8" />}
           </Button>
         </form>
       </div>

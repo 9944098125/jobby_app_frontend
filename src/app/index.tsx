@@ -19,28 +19,32 @@ import { Login } from './pages/Login/Loadable';
 import { Feed } from './pages/Feed/Loadable';
 import Layout from './components/layout';
 import { Register } from './pages/Register/Loadable';
+import { Toaster } from './components/ui/toaster';
 
 export function App() {
   const { i18n } = useTranslation();
   useGlobalSlice();
   return (
-    <BrowserRouter>
-      <Helmet
-        titleTemplate="%s - Jobby App"
-        defaultTitle="Jobby App"
-        htmlAttributes={{ lang: i18n.language }}
-      >
-        <meta name="description" content="Jobby App" />
-      </Helmet>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<Feed />} />
-        </Route>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-      {/* <GlobalStyle /> */}
-    </BrowserRouter>
+    <>
+      <Toaster />
+      <BrowserRouter>
+        <Helmet
+          titleTemplate="%s - Jobby App"
+          defaultTitle="Jobby App"
+          htmlAttributes={{ lang: i18n.language }}
+        >
+          <meta name="description" content="Jobby App" />
+        </Helmet>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="*" element={<NotFound />} />
+            <Route path="/" element={<Feed />} />
+          </Route>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+        {/* <GlobalStyle /> */}
+      </BrowserRouter>
+    </>
   );
 }

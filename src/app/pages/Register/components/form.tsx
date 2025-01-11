@@ -1,5 +1,6 @@
 import { Button } from 'app/components/ui/button';
 import ErrorMessage from 'app/components/ui/error-message';
+import { Icons } from 'app/components/ui/icons';
 import { Input } from 'app/components/ui/input';
 import Label from 'app/components/ui/label';
 import { Switch } from 'app/components/ui/switch';
@@ -240,7 +241,10 @@ export const RegisterForm = (props: Props) => {
             className="w-full h-[45px] rounded-[9px]"
             type="submit"
           >
-            Register
+            Register{' '}
+            {(isLoading || imageUploading) && (
+              <Icons.Spinner className="animate-spin h-8 w-8" />
+            )}
           </Button>
         </form>
       </div>

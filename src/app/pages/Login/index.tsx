@@ -45,9 +45,10 @@ export function Login() {
 
   React.useEffect(() => {
     if (loginErrorMessage || errorLoggingIn) {
+      console.log(loginErrorMessage);
       toast({
         description:
-          loginErrorMessage?.[0] || 'Something went wrong while login',
+          (loginErrorMessage as string) || 'Something went wrong while login',
         variant: 'destructive',
       });
     }
