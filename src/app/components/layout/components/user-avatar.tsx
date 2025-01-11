@@ -1,17 +1,36 @@
+import { useGlobalSlice } from 'app/slice';
+import { selectUser } from 'app/slice/selectors';
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   showDropdown: boolean;
+  setShowDropdown: (val: boolean) => void;
   dropdownRef: any;
 };
 const UserAvatar = (props: Props) => {
-  const { showDropdown, dropdownRef } = props;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { showDropdown, dropdownRef, setShowDropdown } = props;
+
+  const user = useSelector(selectUser);
+  const { actions } = useGlobalSlice();
+
+  const logout = () => {
+    dispatch(actions.setUser(null));
+    dispatch(actions.setToken(null));
+    navigate('/login', { replace: true });
+  };
   return (
     <React.Fragment>
       <div ref={dropdownRef} className="relative">
-        <div className="cursor-pointer p-1 md:p-2 h-[30px] w-[30px] md:h-[50px] md:w-[50px] rounded-full border-2 md:border-4 border-pink-600">
+        <div
+          onClick={() => setShowDropdown(true)}
+          className="cursor-pointer p-1 md:p-2 h-[30px] w-[30px] md:h-[50px] md:w-[50px] rounded-full border-2 md:border-4 border-pink-600"
+        >
           <img
-            src="/logo.png"
+            src={user?.profilePicture}
             alt=""
             className="h-full w-full object-cover rounded-full"
           />
@@ -98,6 +117,7 @@ const UserAvatar = (props: Props) => {
             </div>
 
             <div
+              onClick={logout}
               style={{
                 borderBottomLeftRadius: '9px',
                 borderBottomRightRadius: '9px',

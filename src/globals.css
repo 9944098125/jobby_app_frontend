@@ -17,3 +17,14 @@ body {
   font-size: 1.4rem;
   background-color: rgb(234, 236, 250);
 }
+
+.react-tel-input .form-control {
+  background-color: rgba(24, 23, 23, 0.644) !important;
+  color: white !important;
+  width: 100% !important;
+  height: 42px !important;
+}
+
+.react-tel-input .flag-dropdown {
+  background-color: rgba(24, 23, 23, 0.644) !important;
+}

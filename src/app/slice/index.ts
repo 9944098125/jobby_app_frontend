@@ -6,7 +6,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { endpoints, formatErrors, baseQuery } from 'utils/api/endpoints';
 
 export const initialState: GlobalState = {
-  user: JSON.parse(localStorage.getItem('asp-ja-user') || 'null') || null,
+  user: JSON.parse(localStorage.getItem('asp-ja-user') || '') || null,
   token: localStorage.getItem('asp-ja-token') || null,
 };
 
@@ -26,7 +26,7 @@ const slice = createSlice({
 });
 
 export const api = createApi({
-  reducerPath: 'global',
+  reducerPath: 'globalApi',
   baseQuery,
   endpoints: build => ({
     login: build.mutation<any, any>({

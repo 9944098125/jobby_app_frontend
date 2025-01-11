@@ -15,7 +15,7 @@ const Navbar = (props: Props) => {
   const userDropdownRef = useRef<HTMLDivElement>(null);
 
   const user = useSelector(selectUser);
-
+  console.log('user', user);
   useClickOutside(userDropdownRef, () => {
     setShowDropdown(false);
   });
@@ -83,6 +83,7 @@ const Navbar = (props: Props) => {
           <UserAvatar
             showDropdown={showDropdown}
             dropdownRef={userDropdownRef}
+            setShowDropdown={setShowDropdown}
           />
         ) : (
           <AuthenticationLinks />

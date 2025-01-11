@@ -18,6 +18,7 @@ import { useGlobalSlice } from './slice';
 import { Login } from './pages/Login/Loadable';
 import { Feed } from './pages/Feed/Loadable';
 import Layout from './components/layout';
+import { Register } from './pages/Register/Loadable';
 
 export function App() {
   const { i18n } = useTranslation();
@@ -36,6 +37,7 @@ export function App() {
           <Route path="/" element={<Feed />} />
         </Route>
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       {/* <GlobalStyle /> */}

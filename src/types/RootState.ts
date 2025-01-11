@@ -1,4 +1,5 @@
 import { GlobalState } from 'app//slice/types';
+import { initialState } from 'app/slice';
 // [IMPORT NEW CONTAINERSTATE ABOVE] < Needed for generating containers seamlessly
 
 /* 
@@ -6,6 +7,7 @@ import { GlobalState } from 'app//slice/types';
   You have to declare them here manually
 */
 export interface RootState {
+  globalApi: any;
   global?: GlobalState;
   // [INSERT NEW REDUCER KEY ABOVE] < Needed for generating containers seamlessly
 }

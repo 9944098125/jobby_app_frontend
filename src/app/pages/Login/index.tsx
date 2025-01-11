@@ -4,10 +4,12 @@ import LoginForm from './components/form';
 import { useGlobalSlice } from 'app/slice';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'app/components/ui/use-toast';
+import { useDispatch } from 'react-redux';
 
 export function Login() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { useLoginMutation } = useGlobalSlice();
+  const { useLoginMutation, actions } = useGlobalSlice();
 
   const [
     triggerLogin,
@@ -24,14 +26,22 @@ export function Login() {
 
   React.useEffect(() => {
     if (loggedIn) {
-      console.log('user details', loginData);
+      dispatch(actions.setUser(loginData?.user));
+      dispatch(actions.setToken(loginData?.token));
       navigate('/', { replace: true });
       toast({
         description: 'Logged In Successfully',
         variant: 'success',
       });
     }
-  }, [loggedIn, navigate]);
+  }, [
+    loggedIn,
+    navigate,
+    dispatch,
+    actions,
+    loginData?.user,
+    loginData?.token,
+  ]);
 
   React.useEffect(() => {
     if (loginErrorMessage || errorLoggingIn) {
