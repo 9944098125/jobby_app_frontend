@@ -4,14 +4,35 @@ import { Modal } from 'react-responsive-modal';
 import { useForm } from 'react-hook-form';
 import { Input } from 'app/components/ui/input';
 import Label from 'app/components/ui/label';
+import { Button } from 'app/components/ui/button';
+import { Icons } from 'app/components/ui/icons';
+import { useSelector } from 'react-redux';
+import { selectUser } from 'app/slice/selectors';
 
 type Props = {
   show: boolean;
   setShow: (val: boolean) => void;
   heading: string;
+  uploadImages: (files: File[]) => void;
+  urls: string[];
+  handleRemoveImage: (idx: number) => void;
+  uploading: boolean;
+  create: (body: any) => void;
+  isLoading: boolean;
 };
 const FeedModal = (props: Props) => {
-  const { show, setShow, heading } = props;
+  const {
+    show,
+    setShow,
+    heading,
+    uploadImages,
+    urls,
+    handleRemoveImage,
+    uploading,
+    create,
+    isLoading,
+  } = props;
+  const user = useSelector(selectUser);
   const form = useForm();
 
   const {
@@ -21,7 +42,13 @@ const FeedModal = (props: Props) => {
   } = form;
 
   const submitFeedForm = (data: any) => {
-    console.log(data);
+    const body = {
+      userId: user?._id,
+      title: data.feedTitle,
+      description: data.description,
+      images: urls,
+    };
+    create(body);
   };
 
   const closeIcon = (
@@ -66,11 +93,12 @@ const FeedModal = (props: Props) => {
             {heading}
           </span>
         </h5>{' '}
-        <form onSubmit={form.handleSubmit(submitFeedForm)}>
+        <form onSubmit={handleSubmit(submitFeedForm)}>
           <div className="mb-4 w-full">
+            <Label htmlFor="title">Title</Label>
             <Input
               type="text"
-              className="w-full rounded-full h-[45px]"
+              className="w-full rounded-[9px] h-[45px] border border-gray-300 outline-none"
               {...register('feedTitle', {
                 required: 'Feed Title is required !',
               })}
@@ -83,9 +111,10 @@ const FeedModal = (props: Props) => {
           </div>
 
           <div className="mb-4 w-full">
-            <Input
-              type="text"
-              className="w-full rounded-full h-[45px]"
+            <Label htmlFor="description">Description</Label>
+            <textarea
+              rows={5}
+              className="w-full p-2 rounded-[9px] border border-gray-300 outline-none"
               {...register('description', {
                 required: 'Feed Description is required !',
               })}
@@ -98,8 +127,50 @@ const FeedModal = (props: Props) => {
           </div>
 
           <div className="mb-4 w-full">
-            <Label htmlFor="FeedImages">Upload Images</Label>
+            <Label htmlFor="FeedImages">
+              <p>Upload Images</p>
+              <div className="mb-4 flex items-center justify-center h-[80px] border border-pink-600 rounded-[9px] w-full">
+                <img
+                  src="/images/upload.webp"
+                  alt=""
+                  className="h-[50px] w-[50px]"
+                />
+                <Input
+                  multiple
+                  type="file"
+                  style={{ display: 'none' }}
+                  id="FeedImages"
+                  onChange={(e: any) => uploadImages(e.target?.files)}
+                />
+              </div>
+            </Label>
+            <div className="flex flex-wrap gap-5">
+              {urls?.map((url, idx) => {
+                return (
+                  <div key={idx} className="relative mt-5">
+                    <p
+                      onClick={() => handleRemoveImage(idx)}
+                      className="absolute right-[-15px] cursor-pointer top-[-15px] bg-red-600 text-white h-5 w-5 flex items-center justify-center rounded-full"
+                    >
+                      x
+                    </p>
+                    <img src={url} alt="" height={50} width={50} />
+                  </div>
+                );
+              })}
+            </div>
           </div>
+
+          <Button
+            type="submit"
+            variant="greenBtn"
+            className="w-full h-[45px] rounded-full"
+          >
+            Save Post{' '}
+            {(uploading || isLoading) && (
+              <Icons.Spinner className="animate-spin h-8 w-8" />
+            )}
+          </Button>
         </form>
       </Modal>
     </React.Fragment>

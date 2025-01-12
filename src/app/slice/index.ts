@@ -60,7 +60,8 @@ export const api = createApi({
     createFeed: build.mutation<any, any>({
       query: body => {
         return {
-          ...endpoints.createFeed,
+          url: endpoints.createFeed.url + '/' + body.userId,
+          method: endpoints.createFeed.method,
           body: body,
         };
       },

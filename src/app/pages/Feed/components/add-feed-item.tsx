@@ -14,7 +14,7 @@ const AddFeedItem = (props: Props) => {
     <React.Fragment>
       <div
         onClick={clickAddFeed}
-        className="cursor-pointer w-full min-h-[100px] rounded-[9px] p-4 flex items-center justify-stretch"
+        className="cursor-pointer mb-10 w-full min-h-[100px] rounded-[9px] p-4 flex items-center justify-stretch"
       >
         <div className="flex items-stretch md:space-x-5 w-full">
           <div className="hidden md:block h-[80px] w-[80px] border-2 border-pink-600 rounded-full p-2">
