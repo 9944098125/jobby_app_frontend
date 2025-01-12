@@ -1,6 +1,8 @@
 import { useGlobalSlice } from 'app/slice';
-import React from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import AddFeedItem from './components/add-feed-item';
+import FeedModal from './components/feed-modal';
 
 export function Feed() {
   const {
@@ -51,14 +53,28 @@ export function Feed() {
     },
   ] = useDeleteFeedMutation();
 
+  const [showFeedModal, setShowFeedModal] = useState(false);
+
   return (
     <React.Fragment>
       <Helmet>
         <title>Feed</title>
         <meta name="description" content="Feed" />
       </Helmet>
-      <div className="w-full min-h-screen flex items-center justify-center">
-        <h5 className="text-2xl font-poppins font-medium">Feed</h5>
+      <div className="min-h-screen flex justify-center">
+        <div className="w-full md:w-4/6 px-2 md:px-0">
+          <div className="mt-[80px]">
+            {/* adding feed items */}
+            <AddFeedItem clickAddFeed={() => setShowFeedModal(true)} />
+            {showFeedModal && (
+              <FeedModal
+                show={showFeedModal}
+                setShow={setShowFeedModal}
+                heading="Add Your Post"
+              />
+            )}
+          </div>
+        </div>
       </div>
     </React.Fragment>
   );
