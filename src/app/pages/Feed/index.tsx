@@ -2,11 +2,12 @@ import { useGlobalSlice } from 'app/slice';
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import AddFeedItem from './components/add-feed-item';
-import FeedModal from './components/feed-modal';
+import FeedModal from './components/feed-sheet';
 import { toast } from 'app/components/ui/use-toast';
 import FeedItem from './components/feed-item';
 import { useSelector } from 'react-redux';
 import { selectUser } from 'app/slice/selectors';
+import { Sheet, SheetTrigger } from 'app/components/ui/sheet';
 
 export function Feed() {
   const {
@@ -59,6 +60,10 @@ export function Feed() {
 
   const user = useSelector(selectUser);
 
+  const [feedDescription, setFeedDescription] = useState({
+    rawData: '',
+    formattedData: '',
+  });
   const [showFeedModal, setShowFeedModal] = useState(false);
   const [uploadedUrls, setUploadedUrls] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -146,22 +151,30 @@ export function Feed() {
         <div className="w-full md:w-4/6 px-2 md:px-0">
           <div className="mt-[80px] px-5">
             {/* adding feed items */}
-            {user && (
-              <AddFeedItem clickAddFeed={() => setShowFeedModal(true)} />
-            )}
-            {showFeedModal && (
-              <FeedModal
-                show={showFeedModal}
-                setShow={setShowFeedModal}
-                heading="Add Your Post"
-                uploadImages={uploadImages}
-                urls={uploadedUrls}
-                handleRemoveImage={handleRemoveImage}
-                uploading={uploading}
-                create={createFeed}
-                isLoading={createLoading}
-              />
-            )}
+            <div>
+              <Sheet open={showFeedModal} onOpenChange={setShowFeedModal}>
+                {user && (
+                  <SheetTrigger asChild>
+                    <AddFeedItem clickAddFeed={() => setShowFeedModal(true)} />
+                  </SheetTrigger>
+                )}
+                {showFeedModal && (
+                  <FeedModal
+                    show={showFeedModal}
+                    setShow={setShowFeedModal}
+                    heading="Add Your Post"
+                    uploadImages={uploadImages}
+                    urls={uploadedUrls}
+                    handleRemoveImage={handleRemoveImage}
+                    uploading={uploading}
+                    create={createFeed}
+                    isLoading={createLoading}
+                    description={feedDescription}
+                    setDescription={setFeedDescription}
+                  />
+                )}
+              </Sheet>
+            </div>
             {feedData?.feedItems?.map(item => {
               return (
                 <FeedItem

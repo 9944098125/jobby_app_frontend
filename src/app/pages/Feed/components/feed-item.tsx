@@ -90,7 +90,19 @@ const FeedItem = (props: Props) => {
           <div className="">
             <ImagesCarousel images={images} />
           </div>
-          <p className="text-xs font-normal font-poppins">{description}</p>
+          {/* <p
+            dangerouslySetInnerHTML={{ __html: description as string }}
+            className="text-[18px] font-normal font-poppins"
+          ></p> */}
+          <p
+            dangerouslySetInnerHTML={{
+              __html: description?.replace(
+                /([\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{2600}-\u{26FF}\u{2700}-\u{27BF}])/gu,
+                '<span class="emoji">$1</span>',
+              ) as string,
+            }}
+            className="text-[18px] font-normal font-poppins"
+          ></p>
         </div>
       </div>
     </React.Fragment>
