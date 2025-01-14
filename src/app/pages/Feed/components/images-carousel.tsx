@@ -19,19 +19,8 @@ const ImagesCarousel = ({ images }: { images: string[] }) => {
 
   return (
     <>
-      {/* Main Carousel */}
-      <Carousel
-        interval={4000}
-        transitionTime={1000}
-        stopOnHover
-        infiniteLoop
-        swipeable
-        autoPlay
-        axis="horizontal"
-        showThumbs={false}
-        showStatus={false}
-      >
-        {images?.map((image, idx) => (
+      <div className="w-full p-4 flex gap-5">
+        {images.slice(0, 2).map((image, idx) => (
           <div
             key={idx}
             className="cursor-pointer"
@@ -39,12 +28,27 @@ const ImagesCarousel = ({ images }: { images: string[] }) => {
           >
             <img
               src={image || ''}
-              alt={`Carousel ${idx}`}
-              className="h-full w-full max-h-[650px]"
+              alt={`Image ${idx}`}
+              className="h-[250px] w-[250px] rounded-[9px]"
             />
           </div>
         ))}
-      </Carousel>
+        {images.length > 2 && (
+          <div
+            className="relative cursor-pointer"
+            onClick={() => openModal(2)} // Open modal for additional images
+          >
+            <img
+              src={images[2] || ''}
+              alt="More Images"
+              className="h-[250px] w-[250px] rounded-[9px] opacity-50"
+            />
+            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-60 text-white text-xl font-bold">
+              +{images.length - 2} More
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Modal */}
       <Modal
@@ -73,8 +77,8 @@ const ImagesCarousel = ({ images }: { images: string[] }) => {
               <div key={idx}>
                 <img
                   src={image || ''}
-                  alt={`Modal Carousel ${idx}`}
-                  className="h-auto w-full max-h-[650px]"
+                  alt=""
+                  className="h-auto w-full max-h-screen"
                 />
               </div>
             ))}

@@ -2,12 +2,14 @@ import { useGlobalSlice } from 'app/slice';
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import AddFeedItem from './components/add-feed-item';
-import FeedModal from './components/feed-sheet';
 import { toast } from 'app/components/ui/use-toast';
 import FeedItem from './components/feed-item';
 import { useSelector } from 'react-redux';
 import { selectUser } from 'app/slice/selectors';
 import { Sheet, SheetTrigger } from 'app/components/ui/sheet';
+import FeedSheet from './components/feed-sheet';
+import { setDefaults } from 'react-i18next';
+import { useForm } from 'react-hook-form';
 
 export function Feed() {
   const {
@@ -15,7 +17,19 @@ export function Feed() {
     useLazyGetFeedsQuery,
     useUpdateFeedMutation,
     useDeleteFeedMutation,
+    useRewriteFeedDescMutation,
   } = useGlobalSlice();
+
+  const [
+    rewriteFeedDesc,
+    {
+      isLoading: rewriteLoading,
+      data: rewriteData,
+      isSuccess: rewriteSuccess,
+      isError: rewriteError,
+      error: rewriteErrorMessage,
+    },
+  ] = useRewriteFeedDescMutation();
 
   const [
     createFeed,
@@ -59,6 +73,7 @@ export function Feed() {
   ] = useDeleteFeedMutation();
 
   const user = useSelector(selectUser);
+  const form = useForm();
 
   const [feedDescription, setFeedDescription] = useState({
     rawData: '',
@@ -121,6 +136,12 @@ export function Feed() {
   useEffect(() => {
     if (createSuccess) {
       setShowFeedModal(false);
+      setFeedDescription({
+        rawData: '',
+        formattedData: '',
+      });
+      form.reset();
+      setUploadedUrls([]);
       toast({
         description: 'Created a Post Successfully !',
         variant: 'success',
@@ -141,6 +162,15 @@ export function Feed() {
     getFeeds({});
   }, [createSuccess]);
 
+  useEffect(() => {
+    if (rewriteSuccess || rewriteData) {
+      setFeedDescription({
+        rawData: rewriteData?.description.replace(/<[^>]*>?/gm, ''),
+        formattedData: rewriteData?.description,
+      });
+    }
+  }, [rewriteSuccess, rewriteData]);
+
   return (
     <React.Fragment>
       <Helmet>
@@ -159,7 +189,7 @@ export function Feed() {
                   </SheetTrigger>
                 )}
                 {showFeedModal && (
-                  <FeedModal
+                  <FeedSheet
                     show={showFeedModal}
                     setShow={setShowFeedModal}
                     heading="Add Your Post"
@@ -171,6 +201,8 @@ export function Feed() {
                     isLoading={createLoading}
                     description={feedDescription}
                     setDescription={setFeedDescription}
+                    rewrite={rewriteFeedDesc}
+                    rewriteLoading={rewriteLoading}
                   />
                 )}
               </Sheet>

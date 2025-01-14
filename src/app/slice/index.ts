@@ -69,6 +69,18 @@ export const api = createApi({
         return formatErrors(baseQueryReturnValue.data);
       },
     }),
+    rewriteFeedDesc: build.mutation<any, any>({
+      query: body => {
+        return {
+          url: endpoints.rewriteFeedDesc.url + '/' + body.userId,
+          method: endpoints.rewriteFeedDesc.method,
+          body: body,
+        };
+      },
+      transformErrorResponse(baseQueryReturnValue, meta, arg) {
+        return formatErrors(baseQueryReturnValue.data);
+      },
+    }),
     getFeeds: build.query<any, any>({
       query: params => {
         return {

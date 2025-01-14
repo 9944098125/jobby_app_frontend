@@ -1,5 +1,5 @@
-import { GearIcon } from '@radix-ui/react-icons';
-import { DeleteIcon, EditIcon } from 'lucide-react';
+import { GearIcon, TrashIcon, UpdateIcon } from '@radix-ui/react-icons';
+import { DeleteIcon, EditIcon, LucideDelete } from 'lucide-react';
 import React, { useRef } from 'react';
 import { formatDate } from 'utils/formatDate';
 import { useClickOutside } from 'utils/hooks/use-click-outside';
@@ -67,7 +67,7 @@ const FeedItem = (props: Props) => {
             {showOptions.bool && showOptions.feedId === _id && (
               <div className="absolute border border-red-200 right-1 top-[35px] bg-white rounded-[9px] w-[150px] p-4">
                 <div className="flex items-center space-x-4 mb-2">
-                  <EditIcon className="text-gray-400 text-[8px] font-bold" />
+                  <UpdateIcon className="text-gray-400 text-[8px] font-bold" />
                   <p className="text-[12px] font-medium font-poppins">
                     Edit Post
                   </p>
@@ -75,7 +75,7 @@ const FeedItem = (props: Props) => {
                 <div className="h-1 bg-red-200 mb-2"></div>
 
                 <div className="flex items-center space-x-4">
-                  <DeleteIcon className="text-red-400 text-[8px] font-bold" />
+                  <TrashIcon className="text-red-400 text-[8px] font-bold" />
                   <p className="text-[12px] font-medium font-poppins">
                     Delete Post
                   </p>
@@ -90,10 +90,6 @@ const FeedItem = (props: Props) => {
           <div className="">
             <ImagesCarousel images={images} />
           </div>
-          {/* <p
-            dangerouslySetInnerHTML={{ __html: description as string }}
-            className="text-[18px] font-normal font-poppins"
-          ></p> */}
           <p
             dangerouslySetInnerHTML={{
               __html: description?.replace(

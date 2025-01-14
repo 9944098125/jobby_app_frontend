@@ -49,6 +49,10 @@ export const endpoints = {
     url: '/feed/create',
     method: HTTP_METHODS.POST,
   },
+  rewriteFeedDesc: {
+    url: '/feed/ai-rewrite',
+    method: HTTP_METHODS.POST,
+  },
   updateFeed: {
     url: '/feed/update',
     method: HTTP_METHODS.PATCH,

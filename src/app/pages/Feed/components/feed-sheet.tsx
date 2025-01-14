@@ -29,8 +29,10 @@ type Props = {
     formattedData: string;
   };
   setDescription: any;
+  rewrite: (body: any) => void;
+  rewriteLoading: boolean;
 };
-const FeedModal = (props: Props) => {
+const FeedSheet = (props: Props) => {
   const {
     show,
     setShow,
@@ -43,6 +45,8 @@ const FeedModal = (props: Props) => {
     isLoading,
     description,
     setDescription,
+    rewrite,
+    rewriteLoading,
   } = props;
   const user = useSelector(selectUser);
   const form = useForm();
@@ -61,6 +65,14 @@ const FeedModal = (props: Props) => {
       rawData: value.replace(/<[^>]*>?/gm, ''),
       formattedData: value,
     });
+  };
+
+  const handleAiRewrite = () => {
+    const body = {
+      description: description?.rawData,
+      userId: user?._id,
+    };
+    rewrite(body);
   };
 
   const handleFocus = () => {
@@ -148,17 +160,23 @@ const FeedModal = (props: Props) => {
           </div>
 
           <div className="mb-6 w-full">
-            <div className="flex items-center space-x-8 mb-4">
+            <div className="flex items-center space-x-8 mb-4 relative">
               <Label htmlFor="description">Description</Label>
               <Button
+                onClick={handleAiRewrite}
                 type="button"
                 className="px-8 py-4 rounded-full flex items-center space-x-5"
                 variant="greenBtn"
               >
-                <p className="font-medium font-poppins">Ai Rewrite</p>
+                <p className="hidden md:block font-medium font-poppins">
+                  Ai Rewrite{' '}
+                </p>
                 <RefreshCwIcon className="h-8 w-8" />
+                {rewriteLoading && (
+                  <Icons.Spinner className="animate-spin h-8 w-8" />
+                )}
               </Button>
-              <div className="relative" ref={emojiRef}>
+              <div className="" ref={emojiRef}>
                 <div className="bg-white rounded-full cursor-pointer p-2">
                   <SmilePlusIcon
                     className="h-10 w-10 text-orange-400"
@@ -166,7 +184,7 @@ const FeedModal = (props: Props) => {
                   />
                 </div>
                 {showEmojiPicker && (
-                  <div className="absolute top-[25px]">
+                  <div className="absolute right-0">
                     <EmojiPicker
                       emojiStyle={EmojiStyle.NATIVE}
                       onEmojiClick={onEmojiClick}
@@ -245,4 +263,4 @@ const FeedModal = (props: Props) => {
   );
 };
 
-export default FeedModal;
+export default FeedSheet;
