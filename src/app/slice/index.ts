@@ -8,6 +8,7 @@ import { endpoints, formatErrors, baseQuery } from 'utils/api/endpoints';
 export const initialState: GlobalState = {
   user: JSON.parse(localStorage.getItem('asp-ja-user') || 'null') || null,
   token: localStorage.getItem('asp-ja-token') || null,
+  editFeed: null,
 };
 
 const slice = createSlice({
@@ -27,6 +28,9 @@ const slice = createSlice({
       localStorage.removeItem('asp-ja-token');
       state.user = null;
       state.token = null;
+    },
+    setEditFeed(state, action: PayloadAction<any>) {
+      state.editFeed = action.payload?.data;
     },
   },
 });
@@ -93,10 +97,11 @@ export const api = createApi({
       },
     }),
     updateFeed: build.mutation<any, any>({
-      query: params => {
+      query: body => {
         return {
-          ...endpoints.fetchFeed,
-          params,
+          url: `${endpoints.updateFeed.url}/${body.feedId}/${body.userId}`,
+          method: endpoints.updateFeed.method,
+          body,
         };
       },
       transformErrorResponse(baseQueryReturnValue, meta, arg) {
@@ -106,7 +111,8 @@ export const api = createApi({
     deleteFeed: build.mutation<any, any>({
       query: params => {
         return {
-          ...endpoints.deleteFeed,
+          url: `${endpoints.deleteFeed.url}/${params.feedId}/${params.userId}`,
+          method: endpoints.deleteFeed.method,
           params,
         };
       },

@@ -4,11 +4,10 @@ import { Helmet } from 'react-helmet-async';
 import AddFeedItem from './components/add-feed-item';
 import { toast } from 'app/components/ui/use-toast';
 import FeedItem from './components/feed-item';
-import { useSelector } from 'react-redux';
-import { selectUser } from 'app/slice/selectors';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectFeedEdit, selectUser } from 'app/slice/selectors';
 import { Sheet, SheetTrigger } from 'app/components/ui/sheet';
 import FeedSheet from './components/feed-sheet';
-import { setDefaults } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 
 export function Feed() {
@@ -72,7 +71,11 @@ export function Feed() {
     },
   ] = useDeleteFeedMutation();
 
+  const dispatch = useDispatch();
+  const { actions } = useGlobalSlice();
+
   const user = useSelector(selectUser);
+  const editFeed = useSelector(selectFeedEdit);
   const form = useForm();
 
   const [feedDescription, setFeedDescription] = useState({
@@ -159,8 +162,27 @@ export function Feed() {
   }, [createError, createErrorMessage]);
 
   useEffect(() => {
+    if (updateSuccess) {
+      setShowFeedModal(false);
+      toast({
+        description: 'Updated the Feed Item Successfully',
+        variant: 'success',
+      });
+    }
+  }, [updateSuccess]);
+
+  useEffect(() => {
+    if (updateError || updateErrorMessage) {
+      toast({
+        description: updateErrorMessage?.[0],
+        variant: 'destructive',
+      });
+    }
+  }, [updateError, updateErrorMessage]);
+
+  useEffect(() => {
     getFeeds({});
-  }, [createSuccess]);
+  }, [createSuccess, updateSuccess, deleteSuccess]);
 
   useEffect(() => {
     if (rewriteSuccess || rewriteData) {
@@ -170,6 +192,37 @@ export function Feed() {
       });
     }
   }, [rewriteSuccess, rewriteData]);
+
+  useEffect(() => {
+    if (editFeed) {
+      console.log('editFeed', editFeed);
+      setShowFeedModal(true);
+    }
+  }, [editFeed]);
+
+  useEffect(() => {
+    if (!showFeedModal) {
+      dispatch(actions.setEditFeed({ data: null }));
+    }
+  }, [showFeedModal]);
+
+  useEffect(() => {
+    if (deleteSuccess) {
+      toast({
+        description: 'Delete the Feed Successfully',
+        variant: 'success',
+      });
+    }
+  }, [deleteSuccess]);
+
+  useEffect(() => {
+    if (deleteError || deleteErrorMessage) {
+      toast({
+        description: deleteErrorMessage as string,
+        variant: 'destructive',
+      });
+    }
+  }, [deleteError, deleteErrorMessage]);
 
   return (
     <React.Fragment>
@@ -203,6 +256,9 @@ export function Feed() {
                     setDescription={setFeedDescription}
                     rewrite={rewriteFeedDesc}
                     rewriteLoading={rewriteLoading}
+                    updateFeed={updateFeed}
+                    setUrls={setUploadedUrls}
+                    updateLoading={updateLoading}
                   />
                 )}
               </Sheet>
@@ -218,6 +274,9 @@ export function Feed() {
                   images={item.images}
                   showOptions={showCrudOptions}
                   setShowOptions={setShowCrudOptions}
+                  feedItem={item}
+                  deleteFeed={deleteFeed}
+                  deleteLoading={deleteLoading}
                 />
               );
             })}

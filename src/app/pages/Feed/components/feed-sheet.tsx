@@ -5,14 +5,15 @@ import { Input } from 'app/components/ui/input';
 import Label from 'app/components/ui/label';
 import { Button } from 'app/components/ui/button';
 import { Icons } from 'app/components/ui/icons';
-import { useSelector } from 'react-redux';
-import { selectUser } from 'app/slice/selectors';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectFeedEdit, selectUser } from 'app/slice/selectors';
 import { SheetContent, SheetHeader } from 'app/components/ui/sheet';
 import EmojiPicker, { EmojiStyle } from 'emoji-picker-react';
 import { useClickOutside } from 'utils/hooks/use-click-outside';
 import { RefreshCwIcon, SmilePlusIcon } from 'lucide-react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { useGlobalSlice } from 'app/slice';
 
 type Props = {
   show: boolean;
@@ -31,6 +32,9 @@ type Props = {
   setDescription: any;
   rewrite: (body: any) => void;
   rewriteLoading: boolean;
+  updateFeed: (body: any) => void;
+  setUrls: any;
+  updateLoading: boolean;
 };
 const FeedSheet = (props: Props) => {
   const {
@@ -47,12 +51,19 @@ const FeedSheet = (props: Props) => {
     setDescription,
     rewrite,
     rewriteLoading,
+    updateFeed,
+    setUrls,
+    updateLoading,
   } = props;
   const user = useSelector(selectUser);
+  const dispatch = useDispatch();
   const form = useForm();
 
   const emojiRef = useRef(null);
   const quillRef = useRef(null);
+
+  const editFeed = useSelector(selectFeedEdit);
+  const { actions } = useGlobalSlice();
 
   const [cursorPosition, setCursorPosition] = useState<number | null>(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -100,14 +111,31 @@ const FeedSheet = (props: Props) => {
     watch,
   } = form;
 
+  useEffect(() => {
+    if (editFeed) {
+      setValue('feedTitle', editFeed?.title);
+      setDescription({
+        rawData: editFeed?.description,
+        formattedData: editFeed?.description,
+      });
+      setUrls(editFeed?.images);
+    }
+  }, [editFeed]);
+
   const submitFeedForm = (data: any) => {
     const body = {
+      feedId: editFeed?._id,
       userId: user?._id,
       title: data.feedTitle,
       description: description.formattedData,
       images: urls,
     };
-    create(body);
+    if (!body.feedId) {
+      delete body.feedId;
+      create(body);
+    } else {
+      updateFeed(body);
+    }
   };
 
   return (
@@ -121,7 +149,10 @@ const FeedSheet = (props: Props) => {
               </span>
             </h5>{' '}
             <div
-              onClick={() => setShow(false)}
+              onClick={() => {
+                setShow(false);
+                dispatch(actions.setEditFeed({ data: null }));
+              }}
               className="border-blue-600 border-2 flex items-center justify-center rounded-full p-2 text-blue-600 cursor-pointer"
             >
               <svg
@@ -253,7 +284,7 @@ const FeedSheet = (props: Props) => {
             className="w-full h-[45px] rounded-full"
           >
             Save Post{' '}
-            {(uploading || isLoading) && (
+            {(uploading || isLoading || updateLoading) && (
               <Icons.Spinner className="animate-spin h-8 w-8" />
             )}
           </Button>
