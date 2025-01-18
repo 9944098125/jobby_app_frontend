@@ -86,21 +86,22 @@ const FeedSheet = (props: Props) => {
     rewrite(body);
   };
 
-  const handleFocus = () => {
-    const quill = quillRef.current?.getEditor();
-    const position = quill?.getSelection()?.index;
-    if (position !== null && position !== undefined) {
-      setCursorPosition(position);
-    }
-  };
-
+  // Function to handle emoji click
   const onEmojiClick = (emojiObject: { emoji: string }) => {
     const quill = quillRef.current?.getEditor(); // Access Quill instance
     if (quill && cursorPosition !== null) {
-      quill.insertText(cursorPosition, emojiObject.emoji); // Insert emoji at the last cursor position
+      quill.insertText(cursorPosition, emojiObject.emoji); // Insert emoji at the cursor position
+      quill.setSelection(cursorPosition + emojiObject.emoji.length); // Move cursor to the end of the emoji
       setCursorPosition(cursorPosition + emojiObject.emoji.length); // Update cursor position
     }
     setShowEmojiPicker(false); // Close emoji picker
+  };
+
+  // Update cursor position whenever selection changes
+  const handleSelectionChange = (range: any) => {
+    if (range) {
+      setCursorPosition(range.index);
+    }
   };
 
   const {
@@ -207,7 +208,7 @@ const FeedSheet = (props: Props) => {
                   <Icons.Spinner className="animate-spin h-8 w-8" />
                 )}
               </Button>
-              <div className="" ref={emojiRef}>
+              <div className="relative" ref={emojiRef}>
                 <div className="bg-white rounded-full cursor-pointer p-2">
                   <SmilePlusIcon
                     className="h-10 w-10 text-orange-400"
@@ -215,10 +216,10 @@ const FeedSheet = (props: Props) => {
                   />
                 </div>
                 {showEmojiPicker && (
-                  <div className="absolute right-0">
+                  <div className="absolute right-[-30px] md:right-[-60px] z-50 bg-white shadow-lg rounded-[9px]">
                     <EmojiPicker
-                      emojiStyle={EmojiStyle.NATIVE}
                       onEmojiClick={onEmojiClick}
+                      emojiStyle={EmojiStyle.NATIVE} // Optional for styling emojis
                     />
                   </div>
                 )}
@@ -229,8 +230,15 @@ const FeedSheet = (props: Props) => {
               theme="snow"
               value={description.formattedData}
               onChange={handleChange}
-              onFocus={handleFocus} // Update cursor position on focus
-              onBlur={handleFocus} // Save cursor position on blur
+              onFocus={() => setCursorPosition(null)} // Reset cursor on focus
+              onBlur={() => {
+                const quill = quillRef.current?.getEditor();
+                const position = quill?.getSelection()?.index;
+                if (position !== null && position !== undefined) {
+                  setCursorPosition(position); // Save cursor position on blur
+                }
+              }}
+              onChangeSelection={range => handleSelectionChange(range)} // Track selection changes
               style={{
                 border: '1px solid #0096FF',
                 borderRadius: '10px',
