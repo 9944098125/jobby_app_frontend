@@ -134,7 +134,8 @@ export const api = createApi({
     updateProfile: build.mutation<any, any>({
       query: body => {
         return {
-          ...endpoints.updateProfile,
+          url: endpoints.updateProfile.url + '/' + body.userId,
+          method: endpoints.updateProfile.method,
           body,
         };
       },
