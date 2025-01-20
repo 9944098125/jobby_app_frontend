@@ -120,6 +120,28 @@ export const api = createApi({
         return formatErrors(baseQueryReturnValue.data);
       },
     }),
+    getProfile: build.query<any, any>({
+      query: params => {
+        return {
+          ...endpoints.getProfile,
+          params,
+        };
+      },
+      transformErrorResponse(baseQueryReturnValue, meta, arg) {
+        return formatErrors(baseQueryReturnValue.data);
+      },
+    }),
+    updateProfile: build.mutation<any, any>({
+      query: body => {
+        return {
+          ...endpoints.updateProfile,
+          body,
+        };
+      },
+      transformErrorResponse(baseQueryReturnValue, meta, arg) {
+        return formatErrors(baseQueryReturnValue.data);
+      },
+    }),
   }),
 });
 

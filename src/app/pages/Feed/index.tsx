@@ -272,6 +272,7 @@ export function Feed() {
                   user={item.owner}
                   createdAt={item.createdAt}
                   images={item.images}
+                  reference={item.reference}
                   showOptions={showCrudOptions}
                   setShowOptions={setShowCrudOptions}
                   feedItem={item}

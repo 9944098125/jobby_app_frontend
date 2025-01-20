@@ -61,4 +61,12 @@ export const endpoints = {
     url: '/feed/delete',
     method: HTTP_METHODS.DELETE,
   },
+  getProfile: {
+    url: '/auth/getProfile',
+    method: HTTP_METHODS.GET,
+  },
+  updateProfile: {
+    url: '/auth/update',
+    method: HTTP_METHODS.PATCH,
+  },
 };

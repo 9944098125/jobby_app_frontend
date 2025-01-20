@@ -115,6 +115,7 @@ const FeedSheet = (props: Props) => {
   useEffect(() => {
     if (editFeed) {
       setValue('feedTitle', editFeed?.title);
+      setValue('reference', editFeed?.reference);
       setDescription({
         rawData: editFeed?.description,
         formattedData: editFeed?.description,
@@ -130,6 +131,7 @@ const FeedSheet = (props: Props) => {
       title: data.feedTitle,
       description: description.formattedData,
       images: urls,
+      reference: data.reference,
     };
     if (!body.feedId) {
       delete body.feedId;
@@ -141,7 +143,7 @@ const FeedSheet = (props: Props) => {
 
   return (
     <React.Fragment>
-      <SheetContent className="bg-[#fce7e76c] backdrop-blur">
+      <SheetContent className="bg-[#ffffffc2] backdrop-blur">
         <SheetHeader>
           <div className="flex items-center justify-between">
             <h5 className="text-[23px] font-medium font-poppins">
@@ -183,6 +185,8 @@ const FeedSheet = (props: Props) => {
               {...register('feedTitle', {
                 required: 'Feed Title is required !',
               })}
+              placeholder="Feed Title"
+              id="title"
             />
             {errors?.feedTitle && (
               <p className="text-red-600 font-medium font-poppins text-[10px]">
@@ -238,6 +242,7 @@ const FeedSheet = (props: Props) => {
                   setCursorPosition(position); // Save cursor position on blur
                 }
               }}
+              id="description"
               onChangeSelection={range => handleSelectionChange(range)} // Track selection changes
               style={{
                 border: '1px solid #0096FF',
@@ -247,6 +252,22 @@ const FeedSheet = (props: Props) => {
             {errors?.description && (
               <p className="text-red-600 font-medium font-poppins text-[10px]">
                 {errors?.description?.message as string}
+              </p>
+            )}
+          </div>
+
+          <div className="mb-6 w-full">
+            <Label htmlFor="reference">Reference</Label>
+            <Input
+              id="reference"
+              type="text"
+              placeholder="Optional"
+              className="w-full bg-white placeholder:text-gray-300 rounded-[9px] h-[45px] border border-gray-300 outline-none"
+              {...register('reference')}
+            />
+            {errors?.reference && (
+              <p className="text-red-600 font-medium font-poppins text-[10px]">
+                {errors?.reference?.message as string}
               </p>
             )}
           </div>

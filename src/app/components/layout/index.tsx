@@ -6,11 +6,13 @@ const Layout = () => {
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   return (
     <React.Fragment>
-      <Navbar
-        showDropdown={showUserDropdown}
-        setShowDropdown={setShowUserDropdown}
-      />
-      <Outlet />
+      <div className="pt-[75px]">
+        <Navbar
+          showDropdown={showUserDropdown}
+          setShowDropdown={setShowUserDropdown}
+        />
+        <Outlet />
+      </div>
     </React.Fragment>
   );
 };

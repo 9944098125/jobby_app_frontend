@@ -64,6 +64,7 @@ module.exports = {
 
       fontFamily: {
         poppins: ['Poppins , sans-serif'],
+        playWrite: ['"Playwrite VN"', 'serif'],
       },
 
       borderRadius: {

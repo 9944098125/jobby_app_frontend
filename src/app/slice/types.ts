@@ -12,6 +12,7 @@ export interface GlobalState {
     title: string;
     description: string;
     images: string[];
+    reference: string;
     createdAt: string;
     updatedAt: string;
   } | null;

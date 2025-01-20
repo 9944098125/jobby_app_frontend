@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectUser } from 'app/slice/selectors';
 import { toast } from 'app/components/ui/use-toast';
 import { Icons } from 'app/components/ui/icons';
+import { Navigation2Icon, NavigationIcon } from 'lucide-react';
 
 type Props = {
   _id: string;
@@ -19,6 +20,7 @@ type Props = {
     name: string;
   };
   images: string[];
+  reference: string;
   createdAt: string;
   showOptions: {
     feedId: string;
@@ -35,6 +37,7 @@ type Props = {
       name: string;
     };
     images: string[];
+    reference: string;
     createdAt: string;
   };
   deleteFeed: any;
@@ -46,6 +49,7 @@ const FeedItem = (props: Props) => {
     images,
     title,
     description,
+    reference,
     user,
     createdAt,
     showOptions,
@@ -106,7 +110,7 @@ const FeedItem = (props: Props) => {
             {showOptions.bool && showOptions.feedId === _id && (
               <div
                 ref={crudOptionsRef}
-                className="absolute border border-red-200 right-1 top-[35px] bg-white rounded-[9px] w-[150px] p-4"
+                className="absolute border border-teal-700 right-1 top-[35px] bg-teal-50 rounded-[9px] w-[150px] p-4"
               >
                 <div
                   onClick={(e: any) => {
@@ -120,7 +124,7 @@ const FeedItem = (props: Props) => {
                     Edit Post
                   </p>
                 </div>
-                <div className="h-1 bg-red-200 mb-2"></div>
+                <div className="h-1 bg-teal-200 mb-2"></div>
 
                 <div
                   onClick={() =>
@@ -138,6 +142,19 @@ const FeedItem = (props: Props) => {
                 </div>
               </div>
             )}
+            <div className="absolute right-[100px] top-1 p-2 border border-gray-400 rounded-[9px] cursor-pointer">
+              <a
+                rel="reference-link noreferrer"
+                href={reference}
+                target="_blank"
+                className="flex items-center w-[150px] justify-center space-x-4 text-[14px] text-blue-400 hover:text-blue-600 hover:underline font-normal font-poppins"
+              >
+                <p className="text-[12px] font-bold text-gray-700 font-poppins">
+                  Reference Link
+                </p>
+                <NavigationIcon className="text-gray-700 h-10 w-10 font-bold" />
+              </a>
+            </div>
           </div>
         </div>
         {/* title of the post */}
