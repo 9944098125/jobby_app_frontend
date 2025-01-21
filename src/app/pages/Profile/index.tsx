@@ -5,6 +5,8 @@ import { selectUser } from 'app/slice/selectors';
 import { EditIcon } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import ImageContainer from './components/image-container';
+import FormContainer from './components/form-container';
 
 export const Profile = () => {
   const { useLazyGetProfileQuery, useUpdateProfileMutation } = useGlobalSlice();
@@ -28,7 +30,7 @@ export const Profile = () => {
     profilePicture: '',
     countryCode: '',
   });
-  const [editingField, setEditingField] = useState(null);
+  const [editingField, setEditingField] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -117,104 +119,22 @@ export const Profile = () => {
     <div className="w-full min-h-screen p-4 md:p-8 lg:p-[100px]">
       <div className="flex flex-col md:flex-row md:items-center p-2 md:p-4 space-x-4 rounded-[9px] border border-teal-400">
         {/* Image Container */}
-        <div className="rounded-[9px] border border-teal-600 pb-4 mb-8 flex flex-col items-center w-full md:w-1/3">
-          <div className="w-[200px] h-[270px] rounded-[9px]">
-            <img
-              src={formData.profilePicture || ''}
-              alt="Profile"
-              className="p-2 rounded-[4px]"
-            />
-          </div>
-          <Button
-            variant="outline"
-            className="w-full flex items-center justify-center py-4"
-            onClick={handleUploadPhoto}
-          >
-            Upload Photo
-          </Button>
-          <input
-            type="file"
-            ref={fileInputRef}
-            className="hidden"
-            onChange={handleFileChange}
-          />
-        </div>
+        <ImageContainer
+          profilePicture={formData?.profilePicture}
+          fileInputRef={fileInputRef}
+          handleFileChange={handleFileChange}
+          handleUploadPhoto={handleUploadPhoto}
+        />
 
         {/* Form Container */}
-        <div className="flex flex-col items-center justify-center md:border-l w-full md:w-2/3">
-          {/* Name Field */}
-          <p className="text-teal-600 leading-loose text-[15px] sm:text-[18px] md:text-[28px] lg:text-[35px] font-medium font-playWrite">
-            I'm{' '}
-            {editingField === 'name' ? (
-              <input
-                className="border border-gray-300 rounded p-2"
-                value={formData.name || ''}
-                onChange={e => handleInputChange('name', e.target.value)}
-                onBlur={() => handleInputBlur('name')}
-              />
-            ) : (
-              <span className="text-pink-600 flex text-[20px] sm:text-[28px] md:text-[38px] lg:text-[55px] font-bold">
-                {formData.name || 'N/A'}
-                <EditIcon
-                  className="text-[15px] cursor-pointer"
-                  onClick={() => handleEditClick('name')}
-                />
-              </span>
-            )}
-          </p>
-
-          {/* Email Field */}
-          <p className="text-blue-600 leading-loose text-[15px] sm:text-[18px] md:text-[28px] lg:text-[35px] font-medium font-playWrite">
-            you can mail me at{' '}
-            {editingField === 'email' ? (
-              <input
-                className="border border-gray-300 rounded p-2"
-                value={formData.email || ''}
-                onChange={e => handleInputChange('email', e.target.value)}
-                onBlur={() => handleInputBlur('email')}
-              />
-            ) : (
-              <span className="text-yellow-400 flex text-[20px] sm:text-[28px] md:text-[38px] lg:text-[55px] font-bold">
-                {formData.email || 'N/A'}
-                <EditIcon
-                  className="text-[15px] cursor-pointer"
-                  onClick={() => handleEditClick('email')}
-                />
-              </span>
-            )}
-          </p>
-
-          {/* Phone Field */}
-          <p className="text-red-600 leading-loose text-[15px] sm:text-[18px] md:text-[28px] lg:text-[35px] font-medium font-playWrite">
-            and call me on{' '}
-            {editingField === 'phone' ? (
-              <div className="flex items-center">
-                <p className="text-2xl font-bold">{formData.countryCode}</p>
-                <input
-                  className="border border-gray-300 rounded p-2"
-                  value={formData.phone || ''}
-                  onChange={e => handleInputChange('phone', e.target.value)}
-                  onBlur={() => handleInputBlur('phone')}
-                />
-              </div>
-            ) : (
-              <span className="text-violet-600 flex text-[20px] sm:text-[28px] md:text-[38px] lg:text-[55px] font-bold">
-                {formData.countryCode + formData.phone || 'N/A'}
-                <EditIcon
-                  className="text-[15px] cursor-pointer"
-                  onClick={() => handleEditClick('phone')}
-                />
-              </span>
-            )}
-          </p>
-
-          <p className="text-cyan-600 leading-loose text-[15px] sm:text-[18px] md:text-[28px] lg:text-[35px] font-medium font-playWrite">
-            I'm {profileDetails?.user?.isEmployer ? 'an' : 'a'}
-            <span className="text-pink-800 flex text-[20px] cursor-pointer sm:text-[28px] md:text-[38px] lg:text-[55px] font-bold">
-              {profileDetails?.user?.isEmployer ? 'Employer' : 'Job Seeker'}
-            </span>
-          </p>
-        </div>
+        <FormContainer
+          handleEditClick={handleEditClick}
+          handleInputBlur={handleInputBlur}
+          handleInputChange={handleInputChange}
+          formData={formData}
+          editingField={editingField}
+          profileDetails={profileDetails}
+        />
       </div>
     </div>
   );
