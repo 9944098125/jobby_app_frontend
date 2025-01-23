@@ -7,9 +7,20 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ImageContainer from './components/image-container';
 import FormContainer from './components/form-container';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from 'app/components/ui/tabs';
+import UpdatePassword from './components/update-password-tab';
 
 export const Profile = () => {
-  const { useLazyGetProfileQuery, useUpdateProfileMutation } = useGlobalSlice();
+  const {
+    useLazyGetProfileQuery,
+    useUpdateProfileMutation,
+    useUpdatePasswordMutation,
+  } = useGlobalSlice();
   const user = useSelector(selectUser);
 
   const [getProfile, { data: profileDetails }] = useLazyGetProfileQuery();
@@ -23,6 +34,16 @@ export const Profile = () => {
     },
   ] = useUpdateProfileMutation();
 
+  const [
+    updatePassword,
+    {
+      isLoading: updatePasswordLoading,
+      isSuccess: updatePasswordSuccess,
+      isError: updatePasswordError,
+      error: updatePasswordErrorMessage,
+    },
+  ] = useUpdatePasswordMutation();
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -31,6 +52,7 @@ export const Profile = () => {
     countryCode: '',
   });
   const [editingField, setEditingField] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<string>('profile');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -64,6 +86,10 @@ export const Profile = () => {
 
   const handleUploadPhoto = () => {
     fileInputRef.current?.click();
+  };
+
+  const tabsChange = (tab: string) => {
+    setActiveTab(tab);
   };
 
   const handleFileChange = async event => {
@@ -115,27 +141,71 @@ export const Profile = () => {
     }
   }, [updateError, updateErrorMessage]);
 
+  useEffect(() => {
+    if (updatePasswordSuccess) {
+      setActiveTab('profile');
+      toast({
+        description: 'Password updated successfully',
+        variant: 'success',
+      });
+    }
+  }, [updatePasswordSuccess]);
+
   return (
     <div className="w-full min-h-screen p-4 md:p-8 lg:p-[100px]">
-      <div className="flex flex-col md:flex-row md:items-center p-2 md:p-4 space-x-4 rounded-[9px] border border-teal-400">
-        {/* Image Container */}
-        <ImageContainer
-          profilePicture={formData?.profilePicture}
-          fileInputRef={fileInputRef}
-          handleFileChange={handleFileChange}
-          handleUploadPhoto={handleUploadPhoto}
-        />
+      <Tabs value={activeTab} onValueChange={tabsChange} defaultValue="profile">
+        <TabsList className="flex justify-start items-center space-x-5">
+          <TabsTrigger
+            className={`px-4 py-2 rounded-tl-[9px] rounded-tr-[9px] ${
+              activeTab === 'profile'
+                ? 'border-4 border-teal-400 border-b-0'
+                : ''
+            }`}
+            value="profile"
+          >
+            Profile
+          </TabsTrigger>
+          <TabsTrigger
+            className={`px-4 py-2 rounded-tl-[9px] rounded-tr-[9px] ${
+              activeTab === 'updatePassword'
+                ? 'border-4 border-teal-400 border-b-0'
+                : ''
+            }`}
+            value="updatePassword"
+          >
+            Update Password
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="profile">
+          <div className="flex flex-col md:flex-row md:items-center p-2 md:p-4 space-x-4 rounded-tl-none rounded-[9px] border-4 border-teal-400">
+            {/* Image Container */}
+            <ImageContainer
+              profilePicture={formData?.profilePicture}
+              fileInputRef={fileInputRef}
+              handleFileChange={handleFileChange}
+              handleUploadPhoto={handleUploadPhoto}
+            />
 
-        {/* Form Container */}
-        <FormContainer
-          handleEditClick={handleEditClick}
-          handleInputBlur={handleInputBlur}
-          handleInputChange={handleInputChange}
-          formData={formData}
-          editingField={editingField}
-          profileDetails={profileDetails}
-        />
-      </div>
+            {/* Form Container */}
+            <FormContainer
+              handleEditClick={handleEditClick}
+              handleInputBlur={handleInputBlur}
+              handleInputChange={handleInputChange}
+              formData={formData}
+              editingField={editingField}
+              profileDetails={profileDetails}
+            />
+          </div>
+        </TabsContent>
+        <TabsContent value="updatePassword">
+          <div className="flex flex-col md:flex-row md:items-center p-2 md:p-4 space-x-4 rounded-tl-none rounded-[9px] border-4 border-teal-400">
+            <UpdatePassword
+              update={updatePassword}
+              isLoading={updatePasswordLoading}
+            />
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

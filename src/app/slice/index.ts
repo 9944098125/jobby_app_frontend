@@ -143,6 +143,18 @@ export const api = createApi({
         return formatErrors(baseQueryReturnValue.data);
       },
     }),
+    updatePassword: build.mutation<any, any>({
+      query: body => {
+        return {
+          url: endpoints.updatePassword.url + '/' + body.userId,
+          method: endpoints.updatePassword.method,
+          body,
+        };
+      },
+      transformErrorResponse(baseQueryReturnValue, meta, arg) {
+        return formatErrors(baseQueryReturnValue.data);
+      },
+    }),
   }),
 });
 

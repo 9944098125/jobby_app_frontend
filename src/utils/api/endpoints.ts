@@ -69,4 +69,8 @@ export const endpoints = {
     url: '/auth/update',
     method: HTTP_METHODS.PATCH,
   },
+  updatePassword: {
+    url: '/auth/updatePassword',
+    method: HTTP_METHODS.PATCH,
+  },
 };
