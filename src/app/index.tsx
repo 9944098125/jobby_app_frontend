@@ -21,6 +21,7 @@ import Layout from './components/layout';
 import { Register } from './pages/Register/Loadable';
 import { Toaster } from './components/ui/toaster';
 import { Profile } from './pages/Profile/Loadable';
+import { Jobs } from './pages/Jobs/Loabable';
 
 export function App() {
   const { i18n } = useTranslation();
@@ -41,6 +42,7 @@ export function App() {
             <Route path="*" element={<NotFound />} />
             <Route path="/" element={<Feed />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/jobs" element={<Jobs />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

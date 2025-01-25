@@ -14,6 +14,7 @@ import {
   TabsTrigger,
 } from 'app/components/ui/tabs';
 import UpdatePassword from './components/update-password-tab';
+import { useNavigate } from 'react-router-dom';
 
 export const Profile = () => {
   const {
@@ -22,6 +23,8 @@ export const Profile = () => {
     useUpdatePasswordMutation,
   } = useGlobalSlice();
   const user = useSelector(selectUser);
+
+  const navigate = useNavigate();
 
   const [getProfile, { data: profileDetails }] = useLazyGetProfileQuery();
   const [
@@ -150,6 +153,16 @@ export const Profile = () => {
       });
     }
   }, [updatePasswordSuccess]);
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/');
+      toast({
+        description: 'No User !',
+        variant: 'destructive',
+      });
+    }
+  }, [user, navigate]);
 
   return (
     <div className="w-full min-h-screen p-4 md:p-8 lg:p-[100px]">

@@ -89,7 +89,7 @@ export const Register = () => {
           backgroundImage: 'url(/images/register-bg.png)',
           backgroundSize: 'cover',
         }}
-        className="h-screen w-full bg-center bg-no-repeat grid grid-cols-12"
+        className="min-h-screen w-full bg-center bg-no-repeat grid grid-cols-12"
       >
         <div className="col-span-11 md:col-span-8 p-4">
           <RegisterForm

@@ -94,7 +94,7 @@ const UpdatePassword = (props: Props) => {
                           : undefined,
                     })}
                     placeholder={item.placeholder}
-                    className="w-full h-[45px] rounded-[9px] outline-none border border-gray-300 focus:border-teal-600 focus:ring-1 focus:ring-teal-600"
+                    className="w-full h-[45px] rounded-[9px] outline-none border border-gray-300 focus:border-teal-600 focus:ring-1 focus:ring-teal-600 placeholder:text-gray-300"
                   />
 
                   <ShowPassword

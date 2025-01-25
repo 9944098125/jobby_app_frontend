@@ -164,6 +164,12 @@ export function Feed() {
   useEffect(() => {
     if (updateSuccess) {
       setShowFeedModal(false);
+      setFeedDescription({
+        rawData: '',
+        formattedData: '',
+      });
+      form.reset();
+      setUploadedUrls([]);
       toast({
         description: 'Updated the Feed Item Successfully',
         variant: 'success',
@@ -174,7 +180,7 @@ export function Feed() {
   useEffect(() => {
     if (updateError || updateErrorMessage) {
       toast({
-        description: updateErrorMessage?.[0],
+        description: updateErrorMessage as string,
         variant: 'destructive',
       });
     }

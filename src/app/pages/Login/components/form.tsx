@@ -37,7 +37,7 @@ const LoginForm = (props: Props) => {
         <div className="py-2">
           <p className="text-[12px] font-poppins font-medium">
             Don't have an account ? Please,{' '}
-            <Link to="/register" style={{ textDecoration: 'none' }}>
+            <Link className="hover:underline" to="/register">
               Register
             </Link>
           </p>

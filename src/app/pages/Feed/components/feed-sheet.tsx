@@ -7,7 +7,12 @@ import { Button } from 'app/components/ui/button';
 import { Icons } from 'app/components/ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectFeedEdit, selectUser } from 'app/slice/selectors';
-import { SheetContent, SheetHeader } from 'app/components/ui/sheet';
+import {
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from 'app/components/ui/sheet';
 import EmojiPicker, { EmojiStyle } from 'emoji-picker-react';
 import { useClickOutside } from 'utils/hooks/use-click-outside';
 import { RefreshCwIcon, SmilePlusIcon } from 'lucide-react';
@@ -143,37 +148,57 @@ const FeedSheet = (props: Props) => {
 
   return (
     <React.Fragment>
-      <SheetContent className="bg-[#ffffffc2] backdrop-blur">
+      <SheetContent
+        onInteractOutside={() => {
+          setShow(false);
+          setDescription({
+            rawData: '',
+            formattedData: '',
+          });
+          setUrls([]);
+          dispatch(actions.setEditFeed({ data: null }));
+        }}
+        className="bg-[#ffffffc2] backdrop-blur"
+      >
         <SheetHeader>
           <div className="flex items-center justify-between">
-            <h5 className="text-[23px] font-medium font-poppins">
-              <span className="bg-gradient-to-r from-yellow-400 via-pink-500 to-teal-700 bg-clip-text text-transparent">
-                {heading}
-              </span>
-            </h5>{' '}
-            <div
-              onClick={() => {
-                setShow(false);
-                dispatch(actions.setEditFeed({ data: null }));
-              }}
-              className="border-blue-600 border-2 flex items-center justify-center rounded-full p-2 text-blue-600 cursor-pointer"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
+            <SheetTitle>
+              <h5 className="text-[23px] font-medium font-poppins">
+                <span className="bg-gradient-to-r from-yellow-400 via-pink-500 to-teal-700 bg-clip-text text-transparent">
+                  {heading}
+                </span>
+              </h5>{' '}
+            </SheetTitle>
+            <SheetClose>
+              <div
+                onClick={() => {
+                  setShow(false);
+                  setDescription({
+                    rawData: '',
+                    formattedData: '',
+                  });
+                  setUrls([]);
+                  dispatch(actions.setEditFeed({ data: null }));
+                }}
+                className="border-blue-600 border-2 flex items-center justify-center rounded-full p-2 text-blue-600 cursor-pointer"
               >
-                <path
-                  d="M18 6L6 18M6 6L18 18"
-                  stroke="#0019f7"
-                  stroke-width="4"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M18 6L6 18M6 6L18 18"
+                    stroke="#0019f7"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+            </SheetClose>
           </div>
         </SheetHeader>
         <form onSubmit={handleSubmit(submitFeedForm)}>

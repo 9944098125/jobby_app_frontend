@@ -114,9 +114,9 @@ export const RegisterForm = (props: Props) => {
           </span>
         </h5>
         <div className="py-2">
-          <p className="text-[12px] font-poppins font-medium">
-            Already have an account ? Please,
-            <Link to="/login" style={{ textDecoration: 'none' }}>
+          <p className="text-[12px] text-white font-poppins font-medium">
+            Already have an account ? Please,{' '}
+            <Link className="hover:underline" to="/login">
               Login
             </Link>
           </p>

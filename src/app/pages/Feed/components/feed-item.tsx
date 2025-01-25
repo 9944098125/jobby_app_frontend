@@ -95,12 +95,12 @@ const FeedItem = (props: Props) => {
             />
             <div className="p-2">
               <h5 className="text-sm font-poppins font-medium">{user?.name}</h5>
-              <p className="text-xs font-normal font-poppins">
+              <p className="text-[10px] md:text-[12px] text-gray-500 font-normal font-poppins">
                 {formatDate(createdAt)}
               </p>
             </div>
           </div>
-          <div className="relative">
+          <div className="relative flex items-center flex-col-reverse md:flex-row">
             <div
               onClick={() => setShowOptions({ feedId: _id, bool: true })}
               className="p-2 border border-gray-400 rounded-[9px] cursor-pointer"
@@ -142,14 +142,14 @@ const FeedItem = (props: Props) => {
                 </div>
               </div>
             )}
-            <div className="absolute right-[100px] top-1 p-2 border border-gray-400 rounded-[9px] cursor-pointer">
+            <div className="static md:absolute right-[100px] top-1 rounded-[9px] cursor-pointer">
               <a
                 rel="reference-link noreferrer"
                 href={reference}
                 target="_blank"
-                className="flex items-center w-[150px] justify-center space-x-4 text-[14px] text-blue-400 hover:text-blue-600 hover:underline font-normal font-poppins"
+                className="flex items-center justify-center md:w-[150px] space-x-4 text-[14px] text-blue-400 hover:text-blue-600 hover:underline font-normal font-poppins"
               >
-                <p className="text-[12px] font-bold text-gray-700 font-poppins">
+                <p className="text-[12px] hidden md:block font-bold text-gray-700 font-poppins">
                   Reference Link
                 </p>
                 <NavigationIcon className="text-gray-700 h-10 w-10 font-bold" />
@@ -158,8 +158,10 @@ const FeedItem = (props: Props) => {
           </div>
         </div>
         {/* title of the post */}
-        <div className="pt-[100px] p-4 px-0 md:px-[80px] lg:px-[120px]">
-          <h5 className="text-[24px] font-medium font-poppins">{title}</h5>
+        <div className="pt-[100px] p-2 md:px-[80px] lg:px-[120px]">
+          <h5 className="text-[14px] sm:text-[18px] md:text-[24px] font-medium font-poppins">
+            {title}
+          </h5>
           <div className="">
             <ImagesCarousel images={images} />
           </div>
@@ -170,7 +172,7 @@ const FeedItem = (props: Props) => {
                 '<span class="emoji">$1</span>',
               ) as string,
             }}
-            className="text-[18px] font-normal font-poppins"
+            className="text-[12px] sm:text-[14px] md:text-[18px] font-normal font-poppins"
           ></p>
         </div>
       </div>
