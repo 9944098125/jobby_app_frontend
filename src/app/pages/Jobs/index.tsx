@@ -83,7 +83,7 @@ export function Jobs() {
             />
           </Sheet>
         )}
-        <div className="p-5 flex items-center justify-center flex-wrap">
+        <div className="p-5 pt-10 flex items-center justify-center flex-wrap">
           {/* all the jobs inside this container  */}
           {jobsData?.jobs?.map(job => {
             return <JobItem key={job?._id} />;

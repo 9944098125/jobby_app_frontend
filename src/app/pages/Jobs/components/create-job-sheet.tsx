@@ -38,7 +38,14 @@ const CreateJobSheet = (props: Props) => {
   } = form;
 
   const submitCreateJob = (data: any) => {
-    create({ ...data, userId: user?._id });
+    console.log('data', data);
+    create({
+      ...data,
+      basicQualifications: data.basicQualifications?.map(i => i.value),
+      skills: data.skills?.map(i => i.value),
+      experience: data.experience?.map(i => i.value),
+      userId: user?._id,
+    });
   };
   return (
     <React.Fragment>
