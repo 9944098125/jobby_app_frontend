@@ -13,14 +13,18 @@ import { settingConfig } from 'utils/settingConfig';
 import makeAnimated from 'react-select/animated';
 import { formatToINROnBlur, handleKeyDown } from 'utils/formatAmount';
 import { Button } from 'app/components/ui/button';
+import { Icons } from 'app/components/ui/icons';
+import { useSelector } from 'react-redux';
+import { selectUser } from 'app/slice/selectors';
 
 type Props = {
   heading: string;
-  show: boolean;
-  setShow: (val: boolean) => void;
+  create: (body: any) => void;
+  isLoading: boolean;
 };
 const CreateJobSheet = (props: Props) => {
-  const { heading, show, setShow } = props;
+  const { heading, create, isLoading } = props;
+  const user = useSelector(selectUser);
 
   const form = useForm();
   const animatedComponents = makeAnimated();
@@ -30,10 +34,11 @@ const CreateJobSheet = (props: Props) => {
     register,
     watch,
     control,
+    handleSubmit,
   } = form;
 
   const submitCreateJob = (data: any) => {
-    console.log('data', data);
+    create({ ...data, userId: user?._id });
   };
   return (
     <React.Fragment>
@@ -68,7 +73,7 @@ const CreateJobSheet = (props: Props) => {
             </SheetClose>
           </div>
         </SheetHeader>
-        <form className="w-full" onSubmit={form.handleSubmit(submitCreateJob)}>
+        <form className="w-full" onSubmit={handleSubmit(submitCreateJob)}>
           <div className="w-full p-2">
             <div className="mb-4">
               <Label htmlFor="companyName">Company Name</Label>
@@ -91,15 +96,15 @@ const CreateJobSheet = (props: Props) => {
             </div>
 
             <div className="mb-4">
-              <Label htmlFor="aboutCompany">About the company</Label>
+              <Label htmlFor="aboutTheCompany">About the company</Label>
               <textarea
                 rows={5}
                 placeholder="Enter About the Company"
-                {...register('aboutCompany')}
+                {...register('aboutTheCompany')}
                 className={`w-full p-4 bg-white placeholder:text-gray-400 rounded-[9px] border-gray-300 outline-none border-2 active:border-teal-600 focus:border-teal-600 ${
-                  errors.aboutCompany ? 'border-2 border-red-600' : ''
+                  errors.aboutTheCompany ? 'border-2 border-red-600' : ''
                 }`}
-                id="aboutCompany"
+                id="aboutTheCompany"
               />
             </div>
 
@@ -124,15 +129,15 @@ const CreateJobSheet = (props: Props) => {
             </div>
 
             <div className="mb-4">
-              <Label htmlFor="aboutJob">About the Job</Label>
+              <Label htmlFor="aboutTheJob">About the Job</Label>
               <textarea
                 rows={5}
                 placeholder="Enter About the Job"
-                {...register('aboutJob')}
+                {...register('aboutTheJob')}
                 className={`w-full p-4 bg-white placeholder:text-gray-400 rounded-[9px] border-gray-300 outline-none border-2 active:border-teal-600 focus:border-teal-600 ${
-                  errors.aboutJob ? 'border-2 border-red-600' : ''
+                  errors.aboutTheJob ? 'border-2 border-red-600' : ''
                 }`}
-                id="aboutJob"
+                id="aboutTheJob"
               />
             </div>
 
@@ -211,40 +216,73 @@ const CreateJobSheet = (props: Props) => {
             </div>
 
             <div className="mb-4">
-              <Label htmlFor="basicQualifications">Basic Qualifications</Label>
-              <Select
-                isMulti
+              <Label htmlFor="basicQualifications">
+                Required Qualifications
+              </Label>
+              <Controller
                 name="basicQualifications"
-                components={animatedComponents}
-                options={settingConfig.qualifications.map(i => ({
-                  value: i.key,
-                  label: i.value,
-                }))}
-                className={`w-full bg-white placeholder:text-gray-400 rounded-[9px] border-gray-300 outline-none border-2 active:border-teal-600 focus:border-teal-600 ${
-                  errors.basicQualifications ? 'border-2 border-red-600' : ''
-                }`}
-                classNamePrefix="select"
+                control={control}
+                rules={{ required: 'basicQualifications is required!' }}
+                render={({ field, fieldState: { error } }) => (
+                  <Select
+                    {...field}
+                    isMulti
+                    name="basicQualifications"
+                    components={animatedComponents}
+                    options={settingConfig.qualifications.map(i => ({
+                      value: i.key,
+                      label: i.value,
+                    }))}
+                    className={`w-full bg-white placeholder:text-gray-400 rounded-[9px] border-gray-300 outline-none border-2 active:border-teal-600 focus:border-teal-600 ${
+                      error ? 'border-2 border-red-600' : ''
+                    }`}
+                    classNamePrefix="select"
+                    onChange={selected => field.onChange(selected)}
+                    value={field.value}
+                  />
+                )}
               />
+              {errors.basicQualifications && (
+                <p className="text-red-600 font-medium font-poppins text-[10px]">
+                  {errors.basicQualifications?.message as string}
+                </p>
+              )}
             </div>
 
             <div className="mb-4">
               <Label htmlFor="skills">Required Skills</Label>
-              <Select
-                isMulti
+              <Controller
                 name="skills"
-                components={animatedComponents}
-                options={settingConfig.skills.map(i => ({
-                  value: i.key,
-                  label: i.value,
-                }))}
-                className={`w-full bg-white placeholder:text-gray-400 rounded-[9px] border-gray-300 outline-none border-2 active:border-teal-600 focus:border-teal-600 ${
-                  errors.skills ? 'border-2 border-red-600' : ''
-                }`}
-                classNamePrefix="select"
+                control={control}
+                rules={{ required: 'Skills is required!' }}
+                render={({ field, fieldState: { error } }) => (
+                  <Select
+                    {...field}
+                    isMulti
+                    name="skills"
+                    components={animatedComponents}
+                    options={settingConfig.skills.map(i => ({
+                      value: i.key,
+                      label: i.value,
+                    }))}
+                    className={`w-full bg-white placeholder:text-gray-400 rounded-[9px] border-gray-300 outline-none border-2 active:border-teal-600 focus:border-teal-600 ${
+                      error ? 'border-2 border-red-600' : ''
+                    }`}
+                    classNamePrefix="select"
+                    onChange={selected => field.onChange(selected)}
+                    value={field.value}
+                  />
+                )}
               />
+              {errors.skills && (
+                <p className="text-red-600 font-medium font-poppins text-[10px]">
+                  {errors.skills?.message as string}
+                </p>
+              )}
             </div>
             <Button variant="special" className="w-full h-[45px] rounded-full">
-              Post Job
+              Post Job{' '}
+              {isLoading && <Icons.Spinner className="animate-spin h-8 w-8" />}
             </Button>
           </div>
         </form>

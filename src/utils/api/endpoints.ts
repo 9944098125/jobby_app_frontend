@@ -73,4 +73,20 @@ export const endpoints = {
     url: '/auth/updatePassword',
     method: HTTP_METHODS.PATCH,
   },
+  createJob: {
+    url: '/jobs/createJob',
+    method: HTTP_METHODS.POST,
+  },
+  readJobs: {
+    url: '/jobs/getJobs',
+    method: HTTP_METHODS.GET,
+  },
+  updateJob: {
+    url: '/jobs/update',
+    method: HTTP_METHODS.PATCH,
+  },
+  deleteJob: {
+    url: '/jobs/delete',
+    method: HTTP_METHODS.DELETE,
+  },
 };

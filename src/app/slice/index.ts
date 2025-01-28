@@ -155,6 +155,52 @@ export const api = createApi({
         return formatErrors(baseQueryReturnValue.data);
       },
     }),
+    createJob: build.mutation<any, any>({
+      query: body => {
+        return {
+          ...endpoints.createJob,
+          body,
+        };
+      },
+      transformErrorResponse(baseQueryReturnValue, meta, arg) {
+        return formatErrors(baseQueryReturnValue.data);
+      },
+    }),
+    updateJob: build.mutation<any, any>({
+      query: body => {
+        return {
+          url: `${endpoints.updateJob.url}/${body.jobId}`,
+          method: endpoints.updateJob.method,
+          body,
+        };
+      },
+      transformErrorResponse(baseQueryReturnValue, meta, arg) {
+        return formatErrors(baseQueryReturnValue.data);
+      },
+    }),
+    getJobs: build.query<any, any>({
+      query: params => {
+        return {
+          ...endpoints.readJobs,
+          params,
+        };
+      },
+      transformErrorResponse(baseQueryReturnValue, meta, arg) {
+        return formatErrors(baseQueryReturnValue.data);
+      },
+    }),
+    deleteJob: build.mutation<any, any>({
+      query: params => {
+        return {
+          url: `${endpoints.deleteJob.url}/${params.jobId}`,
+          method: endpoints.deleteJob.method,
+          params,
+        };
+      },
+      transformErrorResponse(baseQueryReturnValue, meta, arg) {
+        return formatErrors(baseQueryReturnValue.data);
+      },
+    }),
   }),
 });
 
