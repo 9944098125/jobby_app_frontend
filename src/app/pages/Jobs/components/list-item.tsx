@@ -18,9 +18,13 @@ type Props = {
     updatedAt: string;
   };
 };
-const JobItem = (props: Props) => {
+const JobsListItem = (props: Props) => {
   const { item } = props;
-  return <React.Fragment></React.Fragment>;
+  return (
+    <React.Fragment>
+      <div className="py-5"></div>
+    </React.Fragment>
+  );
 };
 
-export default JobItem;
+export default JobsListItem;

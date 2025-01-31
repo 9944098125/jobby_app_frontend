@@ -30,7 +30,7 @@ export const Register = () => {
     if (file === null) {
       return;
     } else if (
-      file.type === 'image/jpeg' ||
+      file?.type === 'image/jpeg' ||
       'image/jpg' ||
       'image/png' ||
       'image.svg' ||

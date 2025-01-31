@@ -16,14 +16,25 @@ import { Button } from 'app/components/ui/button';
 import { Icons } from 'app/components/ui/icons';
 import { useSelector } from 'react-redux';
 import { selectUser } from 'app/slice/selectors';
+import ErrorMessage from 'app/components/ui/error-message';
 
 type Props = {
   heading: string;
   create: (body: any) => void;
   isLoading: boolean;
+  uploadCompanyLogo: (File) => void;
+  imageUploadLoading: boolean;
+  companyLogo: string;
 };
 const CreateJobSheet = (props: Props) => {
-  const { heading, create, isLoading } = props;
+  const {
+    heading,
+    create,
+    isLoading,
+    uploadCompanyLogo,
+    imageUploadLoading,
+    companyLogo,
+  } = props;
   const user = useSelector(selectUser);
 
   const form = useForm();
@@ -45,6 +56,7 @@ const CreateJobSheet = (props: Props) => {
       skills: data.skills?.map(i => i.value),
       experience: data.experience?.map(i => i.value),
       userId: user?._id,
+      companyLogo: companyLogo,
     });
   };
   return (
@@ -100,6 +112,31 @@ const CreateJobSheet = (props: Props) => {
                   {errors.companyName?.message as string}
                 </p>
               )}
+            </div>
+
+            <div className="mb-4">
+              <Label htmlFor="CompanyLogo">
+                <Label htmlFor="CompanyLogo">Upload Company Logo</Label>
+                <Input
+                  id="CompanyLogo"
+                  onChange={(event: any) =>
+                    uploadCompanyLogo(event.target?.files[0])
+                  }
+                  type="file"
+                  style={{ display: 'none' }}
+                />
+                <div className="border-2 border-teal-600 h-[75px] w-[75px] rounded-full p-2 flex items-center justify-center">
+                  {imageUploadLoading ? (
+                    <Icons.Spinner className="animate-spin h-15 w-15 text-teal-600" />
+                  ) : (
+                    <img
+                      src={companyLogo || '/logo.png'}
+                      alt=""
+                      className="h-full w-full rounded-full"
+                    />
+                  )}
+                </div>
+              </Label>
             </div>
 
             <div className="mb-4">
