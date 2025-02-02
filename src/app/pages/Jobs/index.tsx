@@ -42,6 +42,7 @@ export function Jobs() {
   const [show, setShow] = useState(false);
   const [imageUploadLoading, setImageUploadLoading] = useState(false);
   const [companyLogo, setCompanyLogo] = useState('');
+  const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
 
   const changeImage = async (file: File | null) => {
     setImageUploadLoading(true);
@@ -99,9 +100,15 @@ export function Jobs() {
     getJobs({});
   }, [createSuccess]);
 
+  useEffect(() => {
+    if (jobsData?.jobs?.length && !selectedJobId) {
+      setSelectedJobId(jobsData?.jobs[0]?._id);
+    }
+  }, [jobsData, selectedJobId]);
+
   return (
     <React.Fragment>
-      <div className="relative w-full">
+      <div className="relative container pt-10 bg-teal-50">
         {user?.isEmployer && (
           <Sheet open={show} onOpenChange={setShow}>
             <SheetTrigger asChild>
@@ -122,25 +129,34 @@ export function Jobs() {
             />
           </Sheet>
         )}
-        <div className="p-5 pt-10 flex items-center justify-center flex-wrap">
-          {/* all the jobs inside this container  */}
-          {jobsData?.jobs?.map(item => {
-            <div className="container bg-teal-50 shadow-lg h-screen">
-              <div
-                id="LIST_SCROLLBAR"
-                className="w-1/3 h-[80vh] overflow-y-scroll border-r-1 border-r-teal-700"
-              >
-                <JobsListItem item={item} />
-              </div>
+        {/* all the jobs inside this container  */}
+        <div className="w-full grid grid-cols-12">
+          <div className="col-span-4 h-[80vh] overflow-y-auto">
+            {jobsData?.jobs?.map((item: any) => {
               return (
-              <React.Fragment>
-                <div className="w-2/3">
-                  <JobItem item={item} />
-                </div>
-              </React.Fragment>
+                <React.Fragment>
+                  <div key={item?._id} className="">
+                    <JobsListItem
+                      isSelected={selectedJobId === item?._id}
+                      setSelectedJob={setSelectedJobId}
+                      item={item}
+                    />
+                  </div>
+                </React.Fragment>
               );
-            </div>;
-          })}
+            })}
+          </div>
+          <div className="col-span-8 h-[80vh] overflow-y-auto">
+            {jobsData?.jobs?.map((item: any) => {
+              return (
+                <React.Fragment>
+                  <div key={item?._id} className="">
+                    {selectedJobId === item?._id && <JobItem item={item} />}
+                  </div>
+                </React.Fragment>
+              );
+            })}
+          </div>
         </div>
       </div>
     </React.Fragment>

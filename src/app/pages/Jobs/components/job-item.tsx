@@ -6,6 +6,7 @@ type Props = {
     role: string;
     location: string;
     skills: number[];
+    companyLogo: string;
     experience: number[];
     companyName: string;
     basicQualifications: number[];
@@ -20,7 +21,19 @@ type Props = {
 };
 const JobItem = (props: Props) => {
   const { item } = props;
-  return <React.Fragment></React.Fragment>;
+  return (
+    <React.Fragment>
+      <div className="p-5 h-[80vh">
+        {/* company logo and name  */}
+        <div className="p-2">
+          <img src={item?.companyLogo} alt="" className="h-[50px] w-[50px]" />
+          <p className="text-[14px] font-normal font-poppins">
+            {item?.companyName}
+          </p>
+        </div>
+      </div>
+    </React.Fragment>
+  );
 };
 
 export default JobItem;

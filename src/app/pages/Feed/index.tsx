@@ -244,7 +244,7 @@ export function Feed() {
               <Sheet open={showFeedModal} onOpenChange={setShowFeedModal}>
                 {user && (
                   <SheetTrigger asChild>
-                    <AddFeedItem clickAddFeed={() => setShowFeedModal(true)} />
+                    <AddFeedItem clickAddFeed={setShowFeedModal} />
                   </SheetTrigger>
                 )}
                 {showFeedModal && (

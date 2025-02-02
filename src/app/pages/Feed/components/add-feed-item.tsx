@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { MedalIcon, PackagePlusIcon, TagsIcon } from 'lucide-react';
 
 type Props = {
-  clickAddFeed: () => void;
+  clickAddFeed: (val: boolean) => void;
 };
 const AddFeedItem = (props: Props) => {
   const { clickAddFeed } = props;
@@ -13,7 +13,7 @@ const AddFeedItem = (props: Props) => {
   return (
     <React.Fragment>
       <div
-        onClick={clickAddFeed}
+        onClick={() => clickAddFeed(true)}
         className="cursor-pointer mb-10 w-full min-h-[100px] rounded-[9px] p-4 flex items-center justify-stretch"
       >
         <div className="flex items-stretch md:space-x-5 w-full">
