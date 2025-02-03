@@ -31,8 +31,8 @@ const JobsListItem = (props: Props) => {
     <React.Fragment>
       <div
         onClick={() => setSelectedJob(item?._id)}
-        className={`w-full flex items-start space-x-5 py-5 rounded-[9px] ${
-          isSelected && 'bg-teal-100 border border-r-600'
+        className={`w-full cursor-pointer flex items-start space-x-5 py-5 rounded-[9px] ${
+          isSelected && 'bg-teal-100 border border-r-teal-600'
         }`}
       >
         <div className="w-1/5 shadow-lg shadow-teal-600">

@@ -1,4 +1,11 @@
+import { Button } from 'app/components/ui/button';
+import { selectUser } from 'app/slice/selectors';
+import { DeleteIcon, EditIcon, Trash2Icon } from 'lucide-react';
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { formatRelativeDate } from 'utils/agoFormatter';
+import { settingConfig } from 'utils/settingConfig';
 
 type Props = {
   item: {
@@ -21,15 +28,99 @@ type Props = {
 };
 const JobItem = (props: Props) => {
   const { item } = props;
+  const user = useSelector(selectUser);
   return (
     <React.Fragment>
-      <div className="p-5 h-[80vh">
+      <div className="p-5 relative">
+        {user?.isEmployer && (
+          <div className="absolute right-2 top-2 flex items-center space-x-5">
+            <div className="bg-blue-100 rounded-[9px] p-5">
+              <EditIcon className="text-blue-600 text-[15px] font-bold" />
+            </div>
+            <div className="bg-red-100 rounded-[9px] p-5">
+              <Trash2Icon className="text-red-600 text-[15px] font-bold" />
+            </div>
+          </div>
+        )}
         {/* company logo and name  */}
         <div className="p-2">
           <img src={item?.companyLogo} alt="" className="h-[50px] w-[50px]" />
           <p className="text-[14px] font-normal font-poppins">
             {item?.companyName}
           </p>
+          <p className="text-[23px] font-medium font-poppins">{item?.role}</p>
+          <p className="text-[12px] font-medium font-poppins">
+            {item?.location}
+          </p>
+          <p className="text-[10px] font-normal font-poppins">
+            {formatRelativeDate(item?.createdAt)}
+          </p>
+        </div>
+        {user ? (
+          !user?.isEmployer && (
+            <div className="my-4">
+              <Button type="button" variant="special" className="px-5 py-2">
+                Apply
+              </Button>
+            </div>
+          )
+        ) : (
+          <Link
+            to="/login"
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
+            <div className="my-4">
+              <Button type="button" variant="special" className="px-5 py-2">
+                Apply
+              </Button>
+            </div>
+          </Link>
+        )}
+        <div className="p-2 font-poppins">
+          <h5 className="text-[19px] underline font-medium">About the Job</h5>
+          <p className="text-[14px] font-normal">{item?.aboutTheJob}</p>
+        </div>
+
+        <div className="p-2 font-poppins">
+          <h5 className="text-[19px] underline font-medium">
+            Preferred Qualifications
+          </h5>
+          <div className="text-[14px] flex items-center space-x-5 text-gray-400 font-normal">
+            {item?.basicQualifications?.map(eachQualification => {
+              return (
+                <div className="bg-gray-100 border border-gray-600 text-black rounded-full px-5 py-2">
+                  {
+                    settingConfig.qualifications?.filter(
+                      i => i.key === eachQualification,
+                    )?.[0]?.value
+                  }
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="p-2 font-poppins">
+          <h5 className="text-[19px] underline font-medium">Required Skills</h5>
+          <div className="text-[14px] flex items-center space-x-5 text-gray-400 font-normal">
+            {item?.skills?.map(eachSkill => {
+              return (
+                <div className="bg-gray-100 border border-gray-600 text-black rounded-full px-5 py-2">
+                  {
+                    settingConfig.skills?.filter(i => i.key === eachSkill)?.[0]
+                      ?.value
+                  }
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="p-2 font-poppins">
+          <h5 className="text-[19px] underline font-medium">
+            About the Company
+          </h5>
+          <p className="text-[14px] font-normal">{item?.aboutTheCompany}</p>
         </div>
       </div>
     </React.Fragment>

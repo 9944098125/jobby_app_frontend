@@ -130,32 +130,31 @@ export function Jobs() {
           </Sheet>
         )}
         {/* all the jobs inside this container  */}
-        <div className="w-full grid grid-cols-12">
-          <div className="col-span-4 h-[80vh] overflow-y-auto">
-            {jobsData?.jobs?.map((item: any) => {
-              return (
-                <React.Fragment>
-                  <div key={item?._id} className="">
-                    <JobsListItem
-                      isSelected={selectedJobId === item?._id}
-                      setSelectedJob={setSelectedJobId}
-                      item={item}
-                    />
-                  </div>
-                </React.Fragment>
-              );
-            })}
+        <div className="w-full grid grid-cols-12 gap-4">
+          {/* ✅ Job List (Left Side on Large Screens, Full Width on Small Screens) */}
+          <div className="col-span-12 md:col-span-4 md:h-[85vh] overflow-y-auto">
+            {jobsData?.jobs?.map((item: any) => (
+              <div key={item?._id} className="">
+                <JobsListItem
+                  isSelected={selectedJobId === item?._id}
+                  setSelectedJob={setSelectedJobId}
+                  item={item}
+                />
+                {/* ✅ Show JobItem below on small screens */}
+                <div className="block md:hidden">
+                  {selectedJobId === item?._id && <JobItem item={item} />}
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="col-span-8 h-[80vh] overflow-y-auto">
-            {jobsData?.jobs?.map((item: any) => {
-              return (
-                <React.Fragment>
-                  <div key={item?._id} className="">
-                    {selectedJobId === item?._id && <JobItem item={item} />}
-                  </div>
-                </React.Fragment>
-              );
-            })}
+
+          {/* ✅ Job Details (Right Side on Large Screens, Hidden on Small Screens) */}
+          <div className="hidden md:block md:col-span-8 h-[85vh] overflow-y-auto">
+            {jobsData?.jobs?.map((item: any) => (
+              <div key={item?._id} className="">
+                {selectedJobId === item?._id && <JobItem item={item} />}
+              </div>
+            ))}
           </div>
         </div>
       </div>
