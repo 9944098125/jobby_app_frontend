@@ -33,7 +33,7 @@ const JobItem = (props: Props) => {
     <React.Fragment>
       <div className="p-5 relative">
         {user?.isEmployer && (
-          <div className="absolute right-2 top-2 flex items-center space-x-5">
+          <div className="absolute right-[200px] top-2 flex items-center space-x-5">
             <div className="bg-blue-100 rounded-[9px] p-5">
               <EditIcon className="text-blue-600 text-[15px] font-bold" />
             </div>
@@ -101,6 +101,25 @@ const JobItem = (props: Props) => {
         </div>
 
         <div className="p-2 font-poppins">
+          <h5 className="text-[19px] underline font-medium">
+            Required Experience
+          </h5>
+          <div className="text-[14px] flex items-center space-x-5 text-gray-400 font-normal">
+            {item?.experience?.map(exp => {
+              return (
+                <div className="bg-gray-100 border border-gray-600 text-black rounded-full px-5 py-2">
+                  {
+                    settingConfig.requiredExperience?.filter(
+                      i => i.key === exp,
+                    )?.[0]?.value
+                  }
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="p-2 font-poppins">
           <h5 className="text-[19px] underline font-medium">Required Skills</h5>
           <div className="text-[14px] flex items-center space-x-5 text-gray-400 font-normal">
             {item?.skills?.map(eachSkill => {
@@ -114,6 +133,15 @@ const JobItem = (props: Props) => {
               );
             })}
           </div>
+        </div>
+
+        <div className="my-4 flex items-center space-x-5">
+          <p className="text-gray-400 font-medium font-poppins text-[14px]">
+            Salary -
+          </p>
+          <p className="text-teal-600 font-bold font-playWrite text-[18px]">
+            {item?.salary}
+          </p>
         </div>
 
         <div className="p-2 font-poppins">

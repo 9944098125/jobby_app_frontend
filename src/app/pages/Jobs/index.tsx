@@ -108,27 +108,29 @@ export function Jobs() {
 
   return (
     <React.Fragment>
-      <div className="relative container pt-10 bg-teal-50">
-        {user?.isEmployer && (
-          <Sheet open={show} onOpenChange={setShow}>
-            <SheetTrigger asChild>
-              <Button
-                variant="special"
-                className="px-5 py-4 absolute right-1 top-1"
-              >
-                Create a Job
-              </Button>
-            </SheetTrigger>
-            <CreateJobSheet
-              uploadCompanyLogo={changeImage}
-              imageUploadLoading={imageUploadLoading}
-              companyLogo={companyLogo}
-              create={createJob}
-              isLoading={createLoading}
-              heading="Add a Job"
-            />
-          </Sheet>
-        )}
+      <div className="relative container bg-teal-50">
+        <div className="my-8">
+          {user?.isEmployer && (
+            <Sheet open={show} onOpenChange={setShow}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="special"
+                  className="px-5 py-4 absolute right-1 top-1"
+                >
+                  Create a Job
+                </Button>
+              </SheetTrigger>
+              <CreateJobSheet
+                uploadCompanyLogo={changeImage}
+                imageUploadLoading={imageUploadLoading}
+                companyLogo={companyLogo}
+                create={createJob}
+                isLoading={createLoading}
+                heading="Add a Job"
+              />
+            </Sheet>
+          )}
+        </div>
         {/* all the jobs inside this container  */}
         <div className="w-full grid grid-cols-12 gap-4">
           {/* ✅ Job List (Left Side on Large Screens, Full Width on Small Screens) */}
@@ -149,7 +151,10 @@ export function Jobs() {
           </div>
 
           {/* ✅ Job Details (Right Side on Large Screens, Hidden on Small Screens) */}
-          <div className="hidden md:block md:col-span-8 h-[85vh] overflow-y-auto">
+          <div
+            id="LIST_SCROLLBAR"
+            className="hidden md:block md:col-span-8 md:h-[85vh] overflow-y-auto"
+          >
             {jobsData?.jobs?.map((item: any) => (
               <div key={item?._id} className="">
                 {selectedJobId === item?._id && <JobItem item={item} />}
