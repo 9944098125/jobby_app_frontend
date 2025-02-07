@@ -89,4 +89,8 @@ export const endpoints = {
     url: '/jobs/delete',
     method: HTTP_METHODS.DELETE,
   },
+  generateAboutTheJob: {
+    url: '/jobs/generate-job-description',
+    method: HTTP_METHODS.POST,
+  },
 };

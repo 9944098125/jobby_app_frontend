@@ -1,8 +1,8 @@
 import { Button } from 'app/components/ui/button';
 import { Sheet, SheetTrigger } from 'app/components/ui/sheet';
-import { selectUser } from 'app/slice/selectors';
+import { selectEditJob, selectUser } from 'app/slice/selectors';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import CreateJobSheet from './components/create-job-sheet';
 import { useGlobalSlice } from 'app/slice';
 import { toast } from 'app/components/ui/use-toast';
@@ -15,6 +15,8 @@ export function Jobs() {
     useLazyGetJobsQuery,
     useUpdateJobMutation,
     useDeleteJobMutation,
+    useGenerateAboutTheJobMutation,
+    actions,
   } = useGlobalSlice();
 
   const [
@@ -38,10 +40,25 @@ export function Jobs() {
     },
   ] = useLazyGetJobsQuery();
 
+  const [
+    generateAboutTheJob,
+    {
+      data: generateData,
+      isSuccess: generateSuccess,
+      isLoading: generateLoading,
+      isError: generateError,
+      error: generateErrorMessage,
+    },
+  ] = useGenerateAboutTheJobMutation();
+
+  const dispatch = useDispatch();
+
   const user = useSelector(selectUser);
+  const job = useSelector(selectEditJob);
+
   const [show, setShow] = useState(false);
-  const [imageUploadLoading, setImageUploadLoading] = useState(false);
-  const [companyLogo, setCompanyLogo] = useState('');
+  const [imageUploadLoading, setImageUploadLoading] = useState<boolean>(false);
+  const [companyLogo, setCompanyLogo] = useState<string | null>('');
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
 
   const changeImage = async (file: File | null) => {
@@ -77,8 +94,13 @@ export function Jobs() {
     }
   };
 
+  const handleEditJob = (job: any) => {
+    dispatch(actions.setEditJob({ data: job }));
+  };
+
   useEffect(() => {
     if (createSuccess) {
+      setCompanyLogo('');
       setShow(false);
       toast({
         description: 'Created a Job Successfully',
@@ -97,6 +119,15 @@ export function Jobs() {
   }, [createError, createErrorMessage]);
 
   useEffect(() => {
+    if (generateSuccess) {
+      toast({
+        description: 'Generated About the job',
+        variant: 'success',
+      });
+    }
+  }, [generateSuccess]);
+
+  useEffect(() => {
     getJobs({});
   }, [createSuccess]);
 
@@ -106,6 +137,13 @@ export function Jobs() {
     }
   }, [jobsData, selectedJobId]);
 
+  useEffect(() => {
+    if (job) {
+      setShow(true);
+      setCompanyLogo(job?.companyLogo);
+    }
+  }, [job]);
+
   return (
     <React.Fragment>
       <div className="relative container bg-teal-50">
@@ -114,8 +152,9 @@ export function Jobs() {
             <Sheet open={show} onOpenChange={setShow}>
               <SheetTrigger asChild>
                 <Button
+                  type="button"
                   variant="special"
-                  className="px-5 py-4 absolute right-1 top-1"
+                  className="px-5 py-4 absolute z-[9] right-1 top-1"
                 >
                   Create a Job
                 </Button>
@@ -127,6 +166,11 @@ export function Jobs() {
                 create={createJob}
                 isLoading={createLoading}
                 heading="Add a Job"
+                generate={generateAboutTheJob}
+                generateLoading={generateLoading}
+                generateData={generateData}
+                generateSuccess={generateSuccess}
+                createSuccess={createSuccess}
               />
             </Sheet>
           )}
@@ -134,7 +178,10 @@ export function Jobs() {
         {/* all the jobs inside this container  */}
         <div className="w-full grid grid-cols-12 gap-4">
           {/* ✅ Job List (Left Side on Large Screens, Full Width on Small Screens) */}
-          <div className="col-span-12 md:col-span-4 md:h-[85vh] overflow-y-auto">
+          <div
+            id="LIST_SCROLLBAR"
+            className="col-span-12 md:col-span-4 md:h-[85vh] overflow-y-auto"
+          >
             {jobsData?.jobs?.map((item: any) => (
               <div key={item?._id} className="">
                 <JobsListItem
@@ -144,7 +191,9 @@ export function Jobs() {
                 />
                 {/* ✅ Show JobItem below on small screens */}
                 <div className="block md:hidden">
-                  {selectedJobId === item?._id && <JobItem item={item} />}
+                  {selectedJobId === item?._id && (
+                    <JobItem item={item} handleEdit={handleEditJob} />
+                  )}
                 </div>
               </div>
             ))}
@@ -157,7 +206,9 @@ export function Jobs() {
           >
             {jobsData?.jobs?.map((item: any) => (
               <div key={item?._id} className="">
-                {selectedJobId === item?._id && <JobItem item={item} />}
+                {selectedJobId === item?._id && (
+                  <JobItem item={item} handleEdit={handleEditJob} />
+                )}
               </div>
             ))}
           </div>

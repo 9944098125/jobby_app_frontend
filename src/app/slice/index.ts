@@ -9,6 +9,7 @@ export const initialState: GlobalState = {
   user: JSON.parse(localStorage.getItem('asp-ja-user') || 'null') || null,
   token: localStorage.getItem('asp-ja-token') || null,
   editFeed: null,
+  editJob: null,
 };
 
 const slice = createSlice({
@@ -31,6 +32,9 @@ const slice = createSlice({
     },
     setEditFeed(state, action: PayloadAction<any>) {
       state.editFeed = action.payload?.data;
+    },
+    setEditJob(state, action: PayloadAction<any>) {
+      state.editJob = action.payload?.data;
     },
   },
 });
@@ -195,6 +199,17 @@ export const api = createApi({
           url: `${endpoints.deleteJob.url}/${params.jobId}`,
           method: endpoints.deleteJob.method,
           params,
+        };
+      },
+      transformErrorResponse(baseQueryReturnValue, meta, arg) {
+        return formatErrors(baseQueryReturnValue.data);
+      },
+    }),
+    generateAboutTheJob: build.mutation<any, any>({
+      query: body => {
+        return {
+          ...endpoints.generateAboutTheJob,
+          body,
         };
       },
       transformErrorResponse(baseQueryReturnValue, meta, arg) {

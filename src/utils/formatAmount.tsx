@@ -35,3 +35,6 @@ export function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     e.preventDefault();
   }
 }
+export const formatRupee = (amount: number) => {
+  return `₹.${amount.toLocaleString('en-IN')}/-`;
+};

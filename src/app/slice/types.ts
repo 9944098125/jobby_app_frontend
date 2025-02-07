@@ -16,4 +16,21 @@ export interface GlobalState {
     createdAt: string;
     updatedAt: string;
   } | null;
+  editJob: {
+    _id: string;
+    role: string;
+    location: string;
+    skills: number[];
+    companyLogo: string;
+    experience: number[];
+    companyName: string;
+    basicQualifications: number[];
+    appliedUser: any[];
+    aboutTheCompany: string;
+    aboutTheJob: string;
+    salary: string;
+    userId: string;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
 }

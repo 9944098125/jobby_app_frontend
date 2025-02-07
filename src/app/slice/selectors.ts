@@ -11,3 +11,7 @@ export const selectFeedEdit = createSelector(
   [selectSlice],
   state => state.editFeed,
 );
+export const selectEditJob = createSelector(
+  [selectSlice],
+  state => state.editJob,
+);

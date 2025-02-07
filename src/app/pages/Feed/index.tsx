@@ -168,6 +168,7 @@ export function Feed() {
         rawData: '',
         formattedData: '',
       });
+      dispatch(actions.setEditFeed({ data: null }));
       form.reset();
       setUploadedUrls([]);
       toast({

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   SheetClose,
   SheetContent,
@@ -15,7 +15,7 @@ import { formatToINROnBlur, handleKeyDown } from 'utils/formatAmount';
 import { Button } from 'app/components/ui/button';
 import { Icons } from 'app/components/ui/icons';
 import { useSelector } from 'react-redux';
-import { selectUser } from 'app/slice/selectors';
+import { selectEditJob, selectUser } from 'app/slice/selectors';
 import ErrorMessage from 'app/components/ui/error-message';
 
 type Props = {
@@ -24,7 +24,12 @@ type Props = {
   isLoading: boolean;
   uploadCompanyLogo: (File) => void;
   imageUploadLoading: boolean;
-  companyLogo: string;
+  companyLogo: string | null;
+  generate: (body) => void;
+  generateLoading: boolean;
+  generateData: any;
+  generateSuccess: boolean;
+  createSuccess: boolean;
 };
 const CreateJobSheet = (props: Props) => {
   const {
@@ -34,8 +39,14 @@ const CreateJobSheet = (props: Props) => {
     uploadCompanyLogo,
     imageUploadLoading,
     companyLogo,
+    generate,
+    generateLoading,
+    generateData,
+    generateSuccess,
+    createSuccess,
   } = props;
   const user = useSelector(selectUser);
+  const job = useSelector(selectEditJob);
 
   const form = useForm();
   const animatedComponents = makeAnimated();
@@ -45,8 +56,27 @@ const CreateJobSheet = (props: Props) => {
     register,
     watch,
     control,
+    setValue,
     handleSubmit,
   } = form;
+
+  const handleGenerateAboutTheJob = () => {
+    generate({
+      jobTitle: watch('role'),
+    });
+  };
+
+  useEffect(() => {
+    if (generateSuccess) {
+      setValue('aboutTheJob', generateData?.jobDescription);
+    }
+  }, [generateSuccess]);
+
+  useEffect(() => {
+    if (createSuccess) {
+      form.reset();
+    }
+  }, [createSuccess]);
 
   const submitCreateJob = (data: any) => {
     console.log('data', data);
@@ -59,6 +89,24 @@ const CreateJobSheet = (props: Props) => {
       companyLogo: companyLogo,
     });
   };
+
+  useEffect(() => {
+    if (job) {
+      form.reset({
+        ...job,
+        experience: settingConfig.requiredExperience
+          .filter(i => job?.experience.includes(i.key))
+          .map(i => ({ value: i.key, label: i.value })),
+        basicQualifications: settingConfig.qualifications
+          .filter(i => job?.basicQualifications.includes(i.key))
+          .map(i => ({ value: i.key, label: i.value })),
+        skills: settingConfig.skills
+          .filter(i => job?.skills.includes(i.key))
+          .map(i => ({ value: i.key, label: i.value })),
+      });
+    }
+  }, [job]);
+
   return (
     <React.Fragment>
       <SheetContent className="bg-[#ffffffc2] backdrop-blur">
@@ -173,7 +221,19 @@ const CreateJobSheet = (props: Props) => {
             </div>
 
             <div className="mb-4">
-              <Label htmlFor="aboutTheJob">About the Job</Label>
+              <div className="flex items-center justify-between px-5 mb-5">
+                <Label htmlFor="aboutTheJob">About the Job</Label>
+                <Button
+                  onClick={handleGenerateAboutTheJob}
+                  variant="special"
+                  className="px-5 py-2"
+                >
+                  Generate About the Job{' '}
+                  {generateLoading && (
+                    <Icons.Spinner className="animate-spin h-8 w-8" />
+                  )}
+                </Button>
+              </div>
               <textarea
                 rows={5}
                 placeholder="Enter About the Job"
@@ -324,8 +384,12 @@ const CreateJobSheet = (props: Props) => {
                 </p>
               )}
             </div>
-            <Button variant="special" className="w-full h-[45px] rounded-full">
-              Post Job{' '}
+            <Button
+              type="submit"
+              variant="special"
+              className="w-full h-[45px] rounded-full"
+            >
+              {job ? 'Update Job' : 'Post Job'}
               {isLoading && <Icons.Spinner className="animate-spin h-8 w-8" />}
             </Button>
           </div>

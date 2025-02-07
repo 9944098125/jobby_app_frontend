@@ -25,7 +25,6 @@ type Props = {
 
 const JobsListItem = (props: Props) => {
   const { item, isSelected, setSelectedJob } = props;
-  console.log('item', item);
 
   return (
     <React.Fragment>
@@ -35,7 +34,7 @@ const JobsListItem = (props: Props) => {
           isSelected && 'bg-teal-100 border border-r-teal-600'
         }`}
       >
-        <div className="w-1/5 shadow-lg shadow-teal-600">
+        <div className="w-[30%] shadow-lg shadow-teal-600 flex items-center justify-center rounded-[12px]">
           <img
             src={item?.companyLogo}
             alt=""
@@ -52,6 +51,7 @@ const JobsListItem = (props: Props) => {
           <p className="text-[12px] text-gray-400 font-normal font-poppins">
             {item?.location}
           </p>
+          // console.log('item', item);
           <p className="mt-5 text-[12px] text-gray-400 font-normal font-poppins">
             {formatRelativeDate(item?.createdAt)}
           </p>
