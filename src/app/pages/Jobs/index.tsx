@@ -118,6 +118,10 @@ export function Jobs() {
     dispatch(actions.setEditJob({ data: job }));
   };
 
+  const handleDeleteJob = (jobId: string) => {
+    deleteJob({ jobId });
+  };
+
   useEffect(() => {
     if (createSuccess) {
       setCompanyLogo('');
@@ -168,6 +172,39 @@ export function Jobs() {
       });
     }
   }, [generateSuccess]);
+
+  useEffect(() => {
+    if (deleteSuccess) {
+      toast({
+        description: 'Deleted the Job Successfully',
+        variant: 'success',
+      });
+
+      const deletedIndex = jobsData?.jobs?.findIndex(
+        job => job._id === selectedJobId,
+      );
+      // if it is not the last job
+      if (deletedIndex !== -1) {
+        // Determine the next job ID
+        const nextJob =
+          jobsData.jobs[deletedIndex + 1] ||
+          jobsData.jobs[deletedIndex - 1] ||
+          null;
+
+        // Set the next selected job ID
+        setSelectedJobId(nextJob?._id || null);
+      }
+    }
+  }, [deleteSuccess]);
+
+  useEffect(() => {
+    if (deleteError || deleteErrorMessage) {
+      toast({
+        description: deleteErrorMessage as string,
+        variant: 'success',
+      });
+    }
+  }, [deleteError, deleteErrorMessage]);
 
   useEffect(() => {
     getJobs({});
@@ -237,7 +274,12 @@ export function Jobs() {
                 {/* ✅ Show JobItem below on small screens */}
                 <div className="block md:hidden">
                   {selectedJobId === item?._id && (
-                    <JobItem item={item} handleEdit={handleEditJob} />
+                    <JobItem
+                      item={item}
+                      handleEdit={handleEditJob}
+                      handleDelete={handleDeleteJob}
+                      deleteLoading={deleteLoading}
+                    />
                   )}
                 </div>
               </div>
@@ -252,7 +294,12 @@ export function Jobs() {
             {jobsData?.jobs?.map((item: any) => (
               <div key={item?._id} className="">
                 {selectedJobId === item?._id && (
-                  <JobItem item={item} handleEdit={handleEditJob} />
+                  <JobItem
+                    item={item}
+                    handleEdit={handleEditJob}
+                    handleDelete={handleDeleteJob}
+                    deleteLoading={deleteLoading}
+                  />
                 )}
               </div>
             ))}

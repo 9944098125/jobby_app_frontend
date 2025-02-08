@@ -30,11 +30,11 @@ const JobsListItem = (props: Props) => {
     <React.Fragment>
       <div
         onClick={() => setSelectedJob(item?._id)}
-        className={`w-full cursor-pointer flex items-start space-x-5 py-5 rounded-[9px] ${
-          isSelected && 'bg-teal-100 border border-r-teal-600'
+        className={`w-full cursor-pointer flex items-start space-x-5 py-5 px-2 rounded-[9px] ${
+          isSelected && 'bg-teal-600 border border-r-teal-600 text-white'
         }`}
       >
-        <div className="w-[30%] shadow-lg shadow-teal-600 flex items-center justify-center rounded-[12px]">
+        <div className="w-[30%] shadow-lg bg-white shadow-teal-600 flex items-center justify-center rounded-[12px]">
           <img
             src={item?.companyLogo}
             alt=""
@@ -42,16 +42,14 @@ const JobsListItem = (props: Props) => {
           />
         </div>
         <div className="w-4/5">
-          <h5 className="text-[18px] font-poppins text-gray-700 font-normal">
-            {item?.role}
-          </h5>
-          <p className="text-[12px] text-gray-400 font-normal font-poppins">
+          <h5 className="text-[18px] font-poppins font-normal">{item?.role}</h5>
+          <p className="text-[12px] font-normal font-poppins">
             {item?.companyName}
           </p>
-          <p className="text-[12px] text-gray-400 font-normal font-poppins">
+          <p className="text-[12px] font-normal font-poppins">
             {item?.location}
           </p>
-          <p className="mt-5 text-[12px] text-gray-400 font-normal font-poppins">
+          <p className="mt-5 text-[12px] font-normal font-poppins">
             {formatRelativeDate(item?.createdAt)}
           </p>
         </div>

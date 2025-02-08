@@ -1,4 +1,5 @@
 import { Button } from 'app/components/ui/button';
+import { Icons } from 'app/components/ui/icons';
 import { selectUser } from 'app/slice/selectors';
 import { DeleteIcon, EditIcon, Trash2Icon } from 'lucide-react';
 import React from 'react';
@@ -27,24 +28,34 @@ type Props = {
     updatedAt: string;
   };
   handleEdit: (job: any) => void;
+  handleDelete: (jobId: string) => void;
+  deleteLoading: boolean;
 };
 const JobItem = (props: Props) => {
-  const { item, handleEdit } = props;
+  const { item, handleEdit, handleDelete, deleteLoading } = props;
   const user = useSelector(selectUser);
   return (
     <React.Fragment>
       <div className="p-5 relative">
         {user?.isEmployer && (
           <div className="absolute right-[200px] top-2 flex items-center space-x-5">
-            <div
+            <Button
+              variant="outline"
               onClick={() => handleEdit(item)}
               className="bg-blue-100 rounded-[9px] p-5 cursor-pointer"
             >
               <EditIcon className="text-blue-600 text-[15px] font-bold" />
-            </div>
-            <div className="bg-red-100 rounded-[9px] p-5 cursor-pointer">
-              <Trash2Icon className="text-red-600 text-[15px] font-bold" />
-            </div>
+            </Button>
+            <Button
+              onClick={() => handleDelete(item?._id)}
+              variant="outline"
+              className="bg-red-100 rounded-[9px] p-5 cursor-pointer"
+            >
+              <Trash2Icon className="text-red-600 text-[15px] font-bold" />{' '}
+              {deleteLoading && (
+                <Icons.Spinner className="animate-spin h-8 w-8" />
+              )}
+            </Button>
           </div>
         )}
         {/* company logo and name  */}

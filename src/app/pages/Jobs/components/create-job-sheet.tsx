@@ -14,9 +14,10 @@ import makeAnimated from 'react-select/animated';
 import { formatToINROnBlur, handleKeyDown } from 'utils/formatAmount';
 import { Button } from 'app/components/ui/button';
 import { Icons } from 'app/components/ui/icons';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectEditJob, selectUser } from 'app/slice/selectors';
 import ErrorMessage from 'app/components/ui/error-message';
+import { useGlobalSlice } from 'app/slice';
 
 type Props = {
   heading: string;
@@ -53,6 +54,8 @@ const CreateJobSheet = (props: Props) => {
   } = props;
   const user = useSelector(selectUser);
   const job = useSelector(selectEditJob);
+  const dispatch = useDispatch();
+  const { actions } = useGlobalSlice();
 
   const form = useForm();
   const animatedComponents = makeAnimated();
@@ -80,13 +83,33 @@ const CreateJobSheet = (props: Props) => {
 
   useEffect(() => {
     if (createSuccess) {
-      form.reset();
+      form.reset({
+        basicQualifications: null,
+        skills: null,
+        experience: null,
+        companyName: null,
+        aboutTheCompany: null,
+        role: null,
+        aboutTheJob: null,
+        salary: null,
+        location: null,
+      });
     }
   }, [createSuccess]);
 
   useEffect(() => {
     if (updateSuccess) {
-      form.reset();
+      form.reset({
+        basicQualifications: null,
+        skills: null,
+        experience: null,
+        companyName: null,
+        aboutTheCompany: null,
+        role: null,
+        aboutTheJob: null,
+        salary: null,
+        location: null,
+      });
     }
   }, [updateSuccess]);
 
@@ -114,6 +137,21 @@ const CreateJobSheet = (props: Props) => {
     }
   };
 
+  const handleCloseSheet = () => {
+    form.reset({
+      basicQualifications: null,
+      skills: null,
+      experience: null,
+      companyName: null,
+      aboutTheCompany: null,
+      role: null,
+      aboutTheJob: null,
+      salary: null,
+      location: null,
+    });
+    dispatch(actions.setEditJob({ data: null }));
+  };
+
   useEffect(() => {
     if (job) {
       form.reset({
@@ -133,7 +171,10 @@ const CreateJobSheet = (props: Props) => {
 
   return (
     <React.Fragment>
-      <SheetContent className="bg-[#ffffffc2] backdrop-blur">
+      <SheetContent
+        onInteractOutside={(e: any) => e.preventDefault()}
+        className="bg-[#ffffffc2] backdrop-blur"
+      >
         <SheetHeader>
           <div className="flex items-center justify-between">
             <SheetTitle>
@@ -144,7 +185,11 @@ const CreateJobSheet = (props: Props) => {
               </h5>{' '}
             </SheetTitle>
             <SheetClose>
-              <div className="border-blue-600 border-2 flex items-center justify-center rounded-full p-2 text-blue-600 cursor-pointer">
+              <Button
+                onClick={handleCloseSheet}
+                variant="outline"
+                className="border-blue-600 border-2 flex items-center justify-center rounded-full p-2 text-blue-600 cursor-pointer"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -160,7 +205,7 @@ const CreateJobSheet = (props: Props) => {
                     stroke-linejoin="round"
                   />
                 </svg>
-              </div>
+              </Button>
             </SheetClose>
           </div>
         </SheetHeader>
@@ -248,6 +293,7 @@ const CreateJobSheet = (props: Props) => {
               <div className="flex items-center justify-between px-5 mb-5">
                 <Label htmlFor="aboutTheJob">About the Job</Label>
                 <Button
+                  type="button"
                   onClick={handleGenerateAboutTheJob}
                   variant="special"
                   className="px-5 py-2"
