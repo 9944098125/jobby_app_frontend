@@ -4,7 +4,7 @@ import { useGlobalSlice } from 'app/slice';
 import { selectUser } from 'app/slice/selectors';
 import { EditIcon } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ImageContainer from './components/image-container';
 import FormContainer from './components/form-container';
 import {
@@ -15,16 +15,20 @@ import {
 } from 'app/components/ui/tabs';
 import UpdatePassword from './components/update-password-tab';
 import { useNavigate } from 'react-router-dom';
+import UploadResume from './components/upload-resume';
 
 export const Profile = () => {
   const {
     useLazyGetProfileQuery,
     useUpdateProfileMutation,
     useUpdatePasswordMutation,
+    useUploadResumeMutation,
+    actions,
   } = useGlobalSlice();
   const user = useSelector(selectUser);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [getProfile, { data: profileDetails }] = useLazyGetProfileQuery();
   const [
@@ -46,6 +50,16 @@ export const Profile = () => {
       error: updatePasswordErrorMessage,
     },
   ] = useUpdatePasswordMutation();
+
+  const [
+    uploadResume,
+    {
+      isLoading: uploadLoading,
+      isSuccess: uploadSuccess,
+      isError: uploadError,
+      error: uploadErrorMessage,
+    },
+  ] = useUploadResumeMutation();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -128,6 +142,12 @@ export const Profile = () => {
 
   useEffect(() => {
     if (updateSuccess) {
+      dispatch(
+        actions.updateUser({
+          ...user,
+          profilePicture: formData?.profilePicture,
+        }),
+      );
       toast({
         description: 'Updated the Profile Successfully',
         variant: 'success',
@@ -188,6 +208,18 @@ export const Profile = () => {
           >
             Update Password
           </TabsTrigger>
+          {!user?.isEmployer && (
+            <TabsTrigger
+              className={`px-4 py-2 rounded-tl-[9px] rounded-tr-[9px] ${
+                activeTab === 'uploadResume'
+                  ? 'border-4 border-teal-400 border-b-0'
+                  : ''
+              }`}
+              value="uploadResume"
+            >
+              Upload Resume
+            </TabsTrigger>
+          )}
         </TabsList>
         <TabsContent value="profile">
           <div className="flex flex-col md:flex-row md:items-center p-2 md:p-4 space-x-4 rounded-tl-none rounded-[9px] border-4 border-teal-400">
@@ -218,6 +250,17 @@ export const Profile = () => {
             />
           </div>
         </TabsContent>
+        {!user?.isEmployer && (
+          <TabsContent value="uploadResume">
+            <div className="flex flex-col md:flex-row md:items-center p-2 md:p-4 space-x-4 rounded-tl-none rounded-[9px] border-4 border-teal-400">
+              <UploadResume
+                uploadSuccess={uploadSuccess}
+                upload={uploadResume}
+                isLoading={uploadLoading}
+              />
+            </div>
+          </TabsContent>
+        )}
       </Tabs>
     </div>
   );

@@ -28,7 +28,7 @@ const FormContainer = (props: Props) => {
     <React.Fragment>
       <div className="flex flex-col items-center justify-center md:border-l w-full md:w-2/3">
         {/* Name Field */}
-        <p className="text-teal-600 leading-loose text-[15px] sm:text-[18px] md:text-[28px] lg:text-[35px] font-medium font-playWrite">
+        <p className="text-teal-600 leading-loose text-[15px] sm:text-[18px] md:text-[28px] lg:text-[35px] font-medium font-poppins">
           I'm{' '}
           {editingField === 'name' ? (
             <input
@@ -49,7 +49,7 @@ const FormContainer = (props: Props) => {
         </p>
 
         {/* Email Field */}
-        <p className="text-blue-600 leading-loose text-[15px] sm:text-[18px] md:text-[28px] lg:text-[35px] font-medium font-playWrite">
+        <p className="text-blue-600 leading-loose text-[15px] sm:text-[18px] md:text-[28px] lg:text-[35px] font-medium font-poppins">
           you can mail me at{' '}
           {editingField === 'email' ? (
             <input
@@ -70,7 +70,7 @@ const FormContainer = (props: Props) => {
         </p>
 
         {/* Phone Field */}
-        <p className="text-red-600 leading-loose text-[15px] sm:text-[18px] md:text-[28px] lg:text-[35px] font-medium font-playWrite">
+        <p className="text-red-600 leading-loose text-[15px] sm:text-[18px] md:text-[28px] lg:text-[35px] font-medium font-poppins">
           and call me on{' '}
           {editingField === 'phone' ? (
             <div className="flex items-center">
@@ -93,7 +93,7 @@ const FormContainer = (props: Props) => {
           )}
         </p>
 
-        <p className="text-cyan-600 leading-loose text-[15px] sm:text-[18px] md:text-[28px] lg:text-[35px] font-medium font-playWrite">
+        <p className="text-cyan-600 leading-loose text-[15px] sm:text-[18px] md:text-[28px] lg:text-[35px] font-medium font-poppins">
           I'm {profileDetails?.user?.isEmployer ? 'an' : 'a'}
           <span className="text-pink-800 flex text-[20px] cursor-pointer sm:text-[28px] md:text-[38px] lg:text-[55px] font-bold">
             {profileDetails?.user?.isEmployer ? 'Employer' : 'Job Seeker'}

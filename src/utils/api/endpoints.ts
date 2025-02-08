@@ -93,4 +93,8 @@ export const endpoints = {
     url: '/jobs/generate-job-description',
     method: HTTP_METHODS.POST,
   },
+  uploadResume: {
+    url: '/auth/upload-resume',
+    method: HTTP_METHODS.POST,
+  },
 };

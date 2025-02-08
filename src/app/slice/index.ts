@@ -36,6 +36,10 @@ const slice = createSlice({
     setEditJob(state, action: PayloadAction<any>) {
       state.editJob = action.payload?.data;
     },
+    updateUser(state, action: PayloadAction<any>) {
+      state.user = action.payload;
+      localStorage.setItem('asp-ja-user', JSON.stringify(action.payload!));
+    },
   },
 });
 
@@ -209,6 +213,18 @@ export const api = createApi({
       query: body => {
         return {
           ...endpoints.generateAboutTheJob,
+          body,
+        };
+      },
+      transformErrorResponse(baseQueryReturnValue, meta, arg) {
+        return formatErrors(baseQueryReturnValue.data);
+      },
+    }),
+    uploadResume: build.mutation<any, any>({
+      query: ({ userId, body }) => {
+        return {
+          url: endpoints.uploadResume.url + '/' + userId,
+          method: endpoints.uploadResume.method,
           body,
         };
       },
