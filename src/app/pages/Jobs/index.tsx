@@ -51,6 +51,26 @@ export function Jobs() {
     },
   ] = useGenerateAboutTheJobMutation();
 
+  const [
+    updateJob,
+    {
+      isLoading: updateLoading,
+      isSuccess: updateSuccess,
+      isError: updateError,
+      error: updateErrorMessage,
+    },
+  ] = useUpdateJobMutation();
+
+  const [
+    deleteJob,
+    {
+      isLoading: deleteLoading,
+      isSuccess: deleteSuccess,
+      isError: deleteError,
+      error: deleteErrorMessage,
+    },
+  ] = useDeleteJobMutation();
+
   const dispatch = useDispatch();
 
   const user = useSelector(selectUser);
@@ -106,8 +126,30 @@ export function Jobs() {
         description: 'Created a Job Successfully',
         variant: 'success',
       });
+      dispatch(actions.setEditJob({ data: null }));
     }
   }, [createSuccess]);
+
+  useEffect(() => {
+    if (updateSuccess) {
+      setShow(false);
+      setCompanyLogo('');
+      toast({
+        description: 'Updated the Job Successfully',
+        variant: 'success',
+      });
+      dispatch(actions.setEditJob({ data: null }));
+    }
+  }, [updateSuccess]);
+
+  useEffect(() => {
+    if (updateError || updateErrorMessage) {
+      toast({
+        description: updateErrorMessage as string,
+        variant: 'destructive',
+      });
+    }
+  }, [updateError, updateErrorMessage]);
 
   useEffect(() => {
     if (createError) {
@@ -129,7 +171,7 @@ export function Jobs() {
 
   useEffect(() => {
     getJobs({});
-  }, [createSuccess]);
+  }, [createSuccess, updateSuccess, deleteSuccess]);
 
   useEffect(() => {
     if (jobsData?.jobs?.length && !selectedJobId) {
@@ -171,6 +213,9 @@ export function Jobs() {
                 generateData={generateData}
                 generateSuccess={generateSuccess}
                 createSuccess={createSuccess}
+                updateLoading={updateLoading}
+                updateJob={updateJob}
+                updateSuccess={updateSuccess}
               />
             </Sheet>
           )}

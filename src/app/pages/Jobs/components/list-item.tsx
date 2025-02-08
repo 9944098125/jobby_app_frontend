@@ -51,7 +51,6 @@ const JobsListItem = (props: Props) => {
           <p className="text-[12px] text-gray-400 font-normal font-poppins">
             {item?.location}
           </p>
-          // console.log('item', item);
           <p className="mt-5 text-[12px] text-gray-400 font-normal font-poppins">
             {formatRelativeDate(item?.createdAt)}
           </p>

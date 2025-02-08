@@ -30,6 +30,9 @@ type Props = {
   generateData: any;
   generateSuccess: boolean;
   createSuccess: boolean;
+  updateLoading: boolean;
+  updateJob: (body: any) => void;
+  updateSuccess: boolean;
 };
 const CreateJobSheet = (props: Props) => {
   const {
@@ -44,6 +47,9 @@ const CreateJobSheet = (props: Props) => {
     generateData,
     generateSuccess,
     createSuccess,
+    updateLoading,
+    updateJob,
+    updateSuccess,
   } = props;
   const user = useSelector(selectUser);
   const job = useSelector(selectEditJob);
@@ -78,16 +84,34 @@ const CreateJobSheet = (props: Props) => {
     }
   }, [createSuccess]);
 
+  useEffect(() => {
+    if (updateSuccess) {
+      form.reset();
+    }
+  }, [updateSuccess]);
+
   const submitCreateJob = (data: any) => {
     console.log('data', data);
-    create({
-      ...data,
-      basicQualifications: data.basicQualifications?.map(i => i.value),
-      skills: data.skills?.map(i => i.value),
-      experience: data.experience?.map(i => i.value),
-      userId: user?._id,
-      companyLogo: companyLogo,
-    });
+    if (job) {
+      updateJob({
+        ...data,
+        jobId: job?._id,
+        basicQualifications: data.basicQualifications?.map(i => i.value),
+        skills: data.skills?.map(i => i.value),
+        experience: data.experience?.map(i => i.value),
+        userId: user?._id,
+        companyLogo: companyLogo,
+      });
+    } else {
+      create({
+        ...data,
+        basicQualifications: data.basicQualifications?.map(i => i.value),
+        skills: data.skills?.map(i => i.value),
+        experience: data.experience?.map(i => i.value),
+        userId: user?._id,
+        companyLogo: companyLogo,
+      });
+    }
   };
 
   useEffect(() => {
@@ -115,7 +139,7 @@ const CreateJobSheet = (props: Props) => {
             <SheetTitle>
               <h5 className="text-[23px] font-medium font-poppins">
                 <span className="bg-gradient-to-r from-yellow-400 via-pink-500 to-teal-700 bg-clip-text text-transparent">
-                  {heading}
+                  {job ? 'Update Job' : 'Add a Job'}
                 </span>
               </h5>{' '}
             </SheetTitle>
@@ -390,7 +414,9 @@ const CreateJobSheet = (props: Props) => {
               className="w-full h-[45px] rounded-full"
             >
               {job ? 'Update Job' : 'Post Job'}
-              {isLoading && <Icons.Spinner className="animate-spin h-8 w-8" />}
+              {(isLoading || updateLoading) && (
+                <Icons.Spinner className="animate-spin h-8 w-8" />
+              )}
             </Button>
           </div>
         </form>
