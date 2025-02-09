@@ -97,4 +97,8 @@ export const endpoints = {
     url: '/auth/upload-resume',
     method: HTTP_METHODS.POST,
   },
+  applyForJob: {
+    url: '/auth/apply',
+    method: HTTP_METHODS.PATCH,
+  },
 };

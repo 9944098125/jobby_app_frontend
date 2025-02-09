@@ -1,9 +1,11 @@
 import { Button } from 'app/components/ui/button';
 import { Icons } from 'app/components/ui/icons';
+import { toast } from 'app/components/ui/use-toast';
+import { useGlobalSlice } from 'app/slice';
 import { selectUser } from 'app/slice/selectors';
 import { DeleteIcon, EditIcon, Trash2Icon } from 'lucide-react';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { formatRelativeDate } from 'utils/agoFormatter';
 import { formatRupee } from 'utils/formatAmount';
@@ -30,10 +32,24 @@ type Props = {
   handleEdit: (job: any) => void;
   handleDelete: (jobId: string) => void;
   deleteLoading: boolean;
+  apply: any;
+  applyLoading: boolean;
+  applySuccess: boolean;
 };
 const JobItem = (props: Props) => {
-  const { item, handleEdit, handleDelete, deleteLoading } = props;
+  const {
+    item,
+    handleEdit,
+    handleDelete,
+    deleteLoading,
+    apply,
+    applyLoading,
+    applySuccess,
+  } = props;
   const user = useSelector(selectUser);
+  const dispatch = useDispatch();
+  const { actions } = useGlobalSlice();
+
   return (
     <React.Fragment>
       <div className="p-5 relative">
@@ -75,8 +91,34 @@ const JobItem = (props: Props) => {
         {user ? (
           !user?.isEmployer && (
             <div className="my-4">
-              <Button type="button" variant="special" className="px-5 py-2">
-                Apply
+              <Button
+                onClick={() => {
+                  if (user?.resume) {
+                    apply({ jobId: item?._id, userId: user?._id });
+                    dispatch(
+                      actions.updateUser({
+                        ...user,
+                        appliedJobs: [...user?.appliedJobs, item?._id],
+                      }),
+                    );
+                  } else {
+                    toast({
+                      description: 'Please upload your Resume First !',
+                      variant: 'destructive',
+                    });
+                  }
+                }}
+                type="button"
+                variant="special"
+                className="px-5 py-2"
+                disabled={user?.appliedJobs?.includes(item?._id)}
+              >
+                {user?.appliedJobs?.includes(item?._id)
+                  ? 'Applied Already'
+                  : 'Instant Apply'}
+                {applyLoading && (
+                  <Icons.Spinner className="animate-spin h-8 w-8" />
+                )}
               </Button>
             </div>
           )

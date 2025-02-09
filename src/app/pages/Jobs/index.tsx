@@ -16,6 +16,7 @@ export function Jobs() {
     useUpdateJobMutation,
     useDeleteJobMutation,
     useGenerateAboutTheJobMutation,
+    useApplyForJobMutation,
     actions,
   } = useGlobalSlice();
 
@@ -70,6 +71,16 @@ export function Jobs() {
       error: deleteErrorMessage,
     },
   ] = useDeleteJobMutation();
+
+  const [
+    apply,
+    {
+      isLoading: applyLoading,
+      isSuccess: applySuccess,
+      isError: applyError,
+      error: applyErrorMessage,
+    },
+  ] = useApplyForJobMutation();
 
   const dispatch = useDispatch();
 
@@ -208,7 +219,7 @@ export function Jobs() {
 
   useEffect(() => {
     getJobs({});
-  }, [createSuccess, updateSuccess, deleteSuccess]);
+  }, [createSuccess, updateSuccess, deleteSuccess, applySuccess]);
 
   useEffect(() => {
     if (jobsData?.jobs?.length && !selectedJobId) {
@@ -222,6 +233,15 @@ export function Jobs() {
       setCompanyLogo(job?.companyLogo);
     }
   }, [job]);
+
+  useEffect(() => {
+    if (applySuccess) {
+      toast({
+        description: 'Applied for the Job Successfully',
+        variant: 'success',
+      });
+    }
+  }, [applySuccess]);
 
   return (
     <React.Fragment>
@@ -279,6 +299,9 @@ export function Jobs() {
                       handleEdit={handleEditJob}
                       handleDelete={handleDeleteJob}
                       deleteLoading={deleteLoading}
+                      apply={apply}
+                      applyLoading={applyLoading}
+                      applySuccess={applySuccess}
                     />
                   )}
                 </div>
@@ -299,6 +322,9 @@ export function Jobs() {
                     handleEdit={handleEditJob}
                     handleDelete={handleDeleteJob}
                     deleteLoading={deleteLoading}
+                    apply={apply}
+                    applyLoading={applyLoading}
+                    applySuccess={applySuccess}
                   />
                 )}
               </div>

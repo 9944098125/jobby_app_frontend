@@ -232,6 +232,17 @@ export const api = createApi({
         return formatErrors(baseQueryReturnValue.data);
       },
     }),
+    applyForJob: build.mutation<any, any>({
+      query: ({ jobId, userId }) => {
+        return {
+          url: endpoints.applyForJob.url + '/' + jobId + '/' + userId,
+          method: endpoints.applyForJob.method,
+        };
+      },
+      transformErrorResponse(baseQueryReturnValue, meta, arg) {
+        return formatErrors(baseQueryReturnValue.data);
+      },
+    }),
   }),
 });
 
