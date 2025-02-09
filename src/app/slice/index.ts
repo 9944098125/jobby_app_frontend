@@ -243,6 +243,28 @@ export const api = createApi({
         return formatErrors(baseQueryReturnValue.data);
       },
     }),
+    jobsAppliedByUser: build.query<any, any>({
+      query: ({ userId }) => {
+        return {
+          url: endpoints.jobsAppliedByUser.url + '/' + userId,
+          method: endpoints.jobsAppliedByUser.method,
+        };
+      },
+      transformErrorResponse(baseQueryReturnValue, meta, arg) {
+        return formatErrors(baseQueryReturnValue.data);
+      },
+    }),
+    getJobApplicants: build.query<any, any>({
+      query: ({ employerId }) => {
+        return {
+          url: endpoints.getApplicants.url + '/' + employerId,
+          method: endpoints.getApplicants.method,
+        };
+      },
+      transformErrorResponse(baseQueryReturnValue, meta, arg) {
+        return formatErrors(baseQueryReturnValue.data);
+      },
+    }),
   }),
 });
 

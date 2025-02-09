@@ -101,4 +101,12 @@ export const endpoints = {
     url: '/auth/apply',
     method: HTTP_METHODS.PATCH,
   },
+  jobsAppliedByUser: {
+    url: '/auth/jobsAppliedByUser',
+    method: HTTP_METHODS.GET,
+  },
+  getApplicants: {
+    url: '/jobs/applicants',
+    method: HTTP_METHODS.GET,
+  },
 };

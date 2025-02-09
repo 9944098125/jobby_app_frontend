@@ -22,6 +22,8 @@ import { Register } from './pages/Register/Loadable';
 import { Toaster } from './components/ui/toaster';
 import { Profile } from './pages/Profile/Loadable';
 import { Jobs } from './pages/Jobs/Loabable';
+import { AppliedJobs } from './pages/AppliedJobs/Loadable';
+import { Applicants } from './pages/Applicants/Loadable';
 
 export function App() {
   const { i18n } = useTranslation();
@@ -43,6 +45,8 @@ export function App() {
             <Route path="/" element={<Feed />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/jobs" element={<Jobs />} />
+            <Route path="/applied-jobs" element={<AppliedJobs />} />
+            <Route path="/jobs-applicants" element={<Applicants />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

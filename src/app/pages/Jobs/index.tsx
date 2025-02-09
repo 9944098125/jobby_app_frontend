@@ -212,7 +212,7 @@ export function Jobs() {
     if (deleteError || deleteErrorMessage) {
       toast({
         description: deleteErrorMessage as string,
-        variant: 'success',
+        variant: 'destructive',
       });
     }
   }, [deleteError, deleteErrorMessage]);
@@ -245,9 +245,9 @@ export function Jobs() {
 
   return (
     <React.Fragment>
-      <div className="relative container bg-teal-50">
-        <div className="my-8">
-          {user?.isEmployer && (
+      <div className="relative px-10 py-5 bg-teal-50">
+        {user?.isEmployer && (
+          <div className="my-8">
             <Sheet open={show} onOpenChange={setShow}>
               <SheetTrigger asChild>
                 <Button
@@ -275,14 +275,14 @@ export function Jobs() {
                 updateSuccess={updateSuccess}
               />
             </Sheet>
-          )}
-        </div>
+          </div>
+        )}
         {/* all the jobs inside this container  */}
         <div className="w-full grid grid-cols-12 gap-4">
           {/* ✅ Job List (Left Side on Large Screens, Full Width on Small Screens) */}
           <div
             id="LIST_SCROLLBAR"
-            className="col-span-12 md:col-span-4 md:h-[85vh] overflow-y-auto"
+            className="col-span-12 md:col-span-4 md:h-[86vh] overflow-y-auto"
           >
             {jobsData?.jobs?.map((item: any) => (
               <div key={item?._id} className="">
@@ -312,7 +312,7 @@ export function Jobs() {
           {/* ✅ Job Details (Right Side on Large Screens, Hidden on Small Screens) */}
           <div
             id="LIST_SCROLLBAR"
-            className="hidden md:block md:col-span-8 md:h-[85vh] overflow-y-auto"
+            className="hidden md:block md:col-span-8 md:h-[86vh] overflow-y-auto"
           >
             {jobsData?.jobs?.map((item: any) => (
               <div key={item?._id} className="">
