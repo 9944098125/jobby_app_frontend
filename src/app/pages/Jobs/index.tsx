@@ -8,6 +8,8 @@ import { useGlobalSlice } from 'app/slice';
 import { toast } from 'app/components/ui/use-toast';
 import JobItem from './components/job-item';
 import JobsListItem from './components/list-item';
+import { Input } from 'app/components/ui/input';
+import { settingConfig } from 'utils/settingConfig';
 
 export function Jobs() {
   const {
@@ -91,6 +93,7 @@ export function Jobs() {
   const [imageUploadLoading, setImageUploadLoading] = useState<boolean>(false);
   const [companyLogo, setCompanyLogo] = useState<string | null>('');
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
+  const [search, setSearch] = useState<string | null>(null);
 
   const changeImage = async (file: File | null) => {
     setImageUploadLoading(true);
@@ -132,6 +135,32 @@ export function Jobs() {
   const handleDeleteJob = (jobId: string) => {
     deleteJob({ jobId });
   };
+  // for mapping skills for search filter
+  const skillsMap = settingConfig.skills.reduce((acc, skill) => {
+    acc[skill.key] = skill.value.toLowerCase(); // Store skill names in lowercase
+    return acc;
+  }, {});
+
+  const filteredJobs = jobsData?.jobs?.filter((item: any) => {
+    if (!search) return true; // If no search input, show all jobs
+
+    const lowerCaseSearch = search.toLowerCase();
+
+    // Check role
+    const roleMatch = item?.role?.toLowerCase().includes(lowerCaseSearch);
+
+    // Check company name
+    const companyMatch = item?.companyName
+      ?.toLowerCase()
+      .includes(lowerCaseSearch);
+
+    // Check skills (assuming skills is an array of skill IDs and you have a way to get skill names)
+    const skillsMatch = item?.skills?.some((skillId: number) =>
+      skillsMap[skillId]?.includes(lowerCaseSearch),
+    );
+    // Combine all conditions
+    return roleMatch || companyMatch || skillsMatch;
+  });
 
   useEffect(() => {
     if (createSuccess) {
@@ -191,7 +220,7 @@ export function Jobs() {
         variant: 'success',
       });
 
-      const deletedIndex = jobsData?.jobs?.findIndex(
+      const deletedIndex = filteredJobs?.findIndex(
         job => job._id === selectedJobId,
       );
       // if it is not the last job
@@ -222,7 +251,7 @@ export function Jobs() {
   }, [createSuccess, updateSuccess, deleteSuccess, applySuccess]);
 
   useEffect(() => {
-    if (jobsData?.jobs?.length && !selectedJobId) {
+    if (filteredJobs?.length && !selectedJobId) {
       setSelectedJobId(jobsData?.jobs[0]?._id);
     }
   }, [jobsData, selectedJobId]);
@@ -242,6 +271,14 @@ export function Jobs() {
       });
     }
   }, [applySuccess]);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setSearch(search);
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [search]);
 
   return (
     <React.Fragment>
@@ -277,14 +314,23 @@ export function Jobs() {
             </Sheet>
           </div>
         )}
+        <div className="py-5 flex justify-center items-center h-[10vh]">
+          <Input
+            type="text"
+            value={search as any}
+            onChange={(e: any) => setSearch(e.target?.value)}
+            placeholder="Search for Jobs"
+            className="rounded-full border border-gray-400 outline-none h-[4.4rem] w-1/2"
+          />
+        </div>
         {/* all the jobs inside this container  */}
         <div className="w-full grid grid-cols-12 gap-4">
           {/* ✅ Job List (Left Side on Large Screens, Full Width on Small Screens) */}
           <div
             id="LIST_SCROLLBAR"
-            className="col-span-12 md:col-span-4 md:h-[86vh] overflow-y-auto"
+            className="col-span-12 md:col-span-4 md:h-[76vh] overflow-y-auto"
           >
-            {jobsData?.jobs?.map((item: any) => (
+            {filteredJobs?.map((item: any) => (
               <div key={item?._id} className="">
                 <JobsListItem
                   isSelected={selectedJobId === item?._id}
@@ -312,9 +358,9 @@ export function Jobs() {
           {/* ✅ Job Details (Right Side on Large Screens, Hidden on Small Screens) */}
           <div
             id="LIST_SCROLLBAR"
-            className="hidden md:block md:col-span-8 md:h-[86vh] overflow-y-auto"
+            className="hidden md:block md:col-span-8 md:h-[76vh] overflow-y-auto"
           >
-            {jobsData?.jobs?.map((item: any) => (
+            {filteredJobs?.map((item: any) => (
               <div key={item?._id} className="">
                 {selectedJobId === item?._id && (
                   <JobItem
