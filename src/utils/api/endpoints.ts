@@ -1,7 +1,10 @@
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from 'types';
 
-const baseUrl = 'https://jobbyappbackend-production.up.railway.app/api';
+const baseUrl =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:5001/api'
+    : 'https://jobbyappbackend-production.up.railway.app/api';
 
 const defaultHeaders = {
   'Content-Type': 'application/json',
